@@ -51,8 +51,8 @@ class MauriceConnectionSpec extends Specification {
       val columnName = "byteArrayReadWriteTest"
       val writeValue = System.nanoTime().toString.getBytes
 
-      maurice.writeBytes(tableName, rowKey, family1, columnName, writeValue)
-      val readResult = maurice.readBytes(tableName, rowKey, family1, columnName)
+      maurice.writeBytes(tableName, rowKey, new MColumn(family1, columnName), writeValue)
+      val readResult = maurice.readBytes(tableName, rowKey, new MColumn(family1, columnName))
 
       readResult must beEqualTo(writeValue)
     }
