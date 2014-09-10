@@ -13,21 +13,27 @@ class MauriceConnection(connection: HConnection) {
     }
   }
 
-  def writeBytes(tableName: String, rowKey: Array[Byte], column: MColumn, value: Array[Byte]) = {
+  def writeBytes(tableName: String, rowKey: Array[Byte], values: Map[MColumn, Array[Byte]]) = {
     withTable(tableName) { table =>
       val put = new Put(rowKey)
-      put.add(column.rawFamily, column.rawName, value)
+      for (value <- values) {
+        put.add(value._1.rawFamily, value._1.rawName, value._2)
+      }
       table.put(put)
       table.flushCommits()
     }
   }
 
-  def readBytes(tableName: String, rowKey: Array[Byte], column: MColumn): Array[Byte] = {
+  def readBytes(tableName: String, rowKey: Array[Byte], columns: Iterable[MColumn]): Map[MColumn, Array[Byte]] = {
     withTable(tableName) { table =>
       val get = new Get(rowKey)
-      get.addColumn(column.rawFamily, column.rawName)
+      for (column <- columns) {
+        get.addColumn(column.rawFamily, column.rawName)
+      }
       val result = table.get(get)
-      result.getValue(column.rawFamily, column.rawName)
+      columns.map({ column =>
+        column -> result.getValue(column.rawFamily, column.rawName)
+      }).toMap
     }
   }
 

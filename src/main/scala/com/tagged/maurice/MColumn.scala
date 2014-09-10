@@ -1,11 +1,11 @@
 package com.tagged.maurice
 
-case class MColumn(rawFamily: Array[Byte], rawName: Array[Byte]) {
+case class MColumn(family: String, name: String) {
 
-  def this(columnFamily: String, columnName: String) = this(columnFamily.getBytes, columnName.getBytes)
+  def this(rawFamily: Array[Byte], rawName: Array[Byte]) = this(new String(rawFamily), new String(rawName))
 
-  lazy val family = new String(rawFamily)
+  lazy val rawFamily = family.getBytes
 
-  lazy val name = new String(rawName)
+  lazy val rawName = name.getBytes
 
 }

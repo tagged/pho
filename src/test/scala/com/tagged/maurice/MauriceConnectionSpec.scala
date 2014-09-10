@@ -46,15 +46,19 @@ class MauriceConnectionSpec extends Specification {
       readResult must beEqualTo(writeValue)
     }
 
-    "let us write and read byte arrays" in {
+    "let us write and read byte arrays by row key" in {
       val rowKey = System.nanoTime().toString.getBytes
-      val columnName = "byteArrayReadWriteTest"
-      val writeValue = System.nanoTime().toString.getBytes
+      val column1 = MColumn(family1, "byteArrayReadWriteTest1")
+      val column2 = MColumn(family2, "byteArrayReadWriteTest2")
+      val value1 = System.nanoTime().toString.getBytes
+      val value2 = System.nanoTime().toString.getBytes
 
-      maurice.writeBytes(tableName, rowKey, new MColumn(family1, columnName), writeValue)
-      val readResult = maurice.readBytes(tableName, rowKey, new MColumn(family1, columnName))
+      val insertMap = Map(column1 -> value1, column2 -> value2)
+      maurice.writeBytes(tableName, rowKey, insertMap)
+      val readResult = maurice.readBytes(tableName, rowKey, insertMap.keys)
 
-      readResult must beEqualTo(writeValue)
+      // converting the values from arrays to strings allows this equality to work
+      readResult.mapValues({ v => new String(v) }) must beEqualTo(insertMap.mapValues({ v => new String(v) }))
     }
 
   }
