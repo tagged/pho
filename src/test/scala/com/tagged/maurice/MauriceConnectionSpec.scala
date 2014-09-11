@@ -48,8 +48,8 @@ class MauriceConnectionSpec extends Specification {
 
     "let us write and read byte arrays by row key" in {
       val rowKey = System.nanoTime().toString.getBytes
-      val column1 = new Maurice.ColumnFamily(family1).column("byteArrayReadWriteTest1")
-      val column2 = new Maurice.ColumnFamily(family2).column("byteArrayReadWriteTest2")
+      val column1 = Maurice.ColumnFamily(family1).column("byteArrayReadWriteTest1")
+      val column2 = Maurice.ColumnFamily(family2).column("byteArrayReadWriteTest2")
       val value1 = System.nanoTime().toString.getBytes
       val value2 = System.nanoTime().toString.getBytes
 
