@@ -1,8 +1,8 @@
-package com.tagged.maurice
+package com.tagged.morice
 
 import org.apache.hadoop.hbase.client.{Get, Put, HTableInterface, HConnection}
 
-class MauriceConnection(connection: HConnection) {
+class MoriceConnection(connection: HConnection) {
 
   def withTable[A](name: String)(block: HTableInterface => A) = {
     val table = connection.getTable(name)
@@ -13,7 +13,7 @@ class MauriceConnection(connection: HConnection) {
     }
   }
 
-  def writeBytes(tableName: String, rowKey: Array[Byte], values: Map[Maurice.Column, Array[Byte]]) = {
+  def writeBytes(tableName: String, rowKey: Array[Byte], values: Map[Morice.Column, Array[Byte]]) = {
     withTable(tableName) { table =>
       val put = new Put(rowKey)
       for (value <- values) {
@@ -24,7 +24,7 @@ class MauriceConnection(connection: HConnection) {
     }
   }
 
-  def readBytes(tableName: String, rowKey: Array[Byte], columns: Iterable[Maurice.Column]): Map[Maurice.Column, Array[Byte]] = {
+  def readBytes(tableName: String, rowKey: Array[Byte], columns: Iterable[Morice.Column]): Map[Morice.Column, Array[Byte]] = {
     withTable(tableName) { table =>
       val get = new Get(rowKey)
       for (column <- columns) {

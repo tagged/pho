@@ -1,6 +1,6 @@
-package com.tagged.maurice
+package com.tagged.morice
 
-object Maurice {
+object Morice {
 
   case class ColumnFamily(name: String) {
 

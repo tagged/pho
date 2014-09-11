@@ -1,4 +1,4 @@
-package com.tagged.maurice
+package com.tagged.morice
 
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.{Get, Put, HConnectionManager}
@@ -9,7 +9,7 @@ import org.specs2.mutable.Specification
  *
  *     create 'MauriceConnectionSpec', 'family1', 'family2'
  */
-class MauriceConnectionSpec extends Specification {
+class MoriceConnectionSpec extends Specification {
 
   val tableName = "MauriceConnectionSpec"
   val family1 = "family1"
@@ -22,7 +22,7 @@ class MauriceConnectionSpec extends Specification {
   }
 
   val connection = HConnectionManager.createConnection(configuration)
-  val maurice = new MauriceConnection(connection)
+  val maurice = new MoriceConnection(connection)
 
   "withTable" should {
 
@@ -48,8 +48,8 @@ class MauriceConnectionSpec extends Specification {
 
     "let us write and read byte arrays by row key" in {
       val rowKey = System.nanoTime().toString.getBytes
-      val column1 = Maurice.ColumnFamily(family1).column("byteArrayReadWriteTest1")
-      val column2 = Maurice.ColumnFamily(family2).column("byteArrayReadWriteTest2")
+      val column1 = Morice.ColumnFamily(family1).column("byteArrayReadWriteTest1")
+      val column2 = Morice.ColumnFamily(family2).column("byteArrayReadWriteTest2")
       val value1 = System.nanoTime().toString.getBytes
       val value2 = System.nanoTime().toString.getBytes
 
