@@ -39,4 +39,12 @@ object PhoenixConversions {
 
   }
 
+  object ConvertString {
+
+    def getBytes(value: String): Array[Byte] = Bytes.toBytes(value)
+
+    def getValue(bytes: Array[Byte]): String = Bytes.toString(bytes)
+
+  }
+
 }
