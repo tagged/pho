@@ -1,10 +1,19 @@
 package com.tagged.morice
 
-import java.nio.ByteBuffer
-
 import org.apache.hadoop.hbase.util.Bytes
 
 object PhoenixConversions {
+
+  object ConvertBoolean {
+
+    def getBytes(value: Boolean): Array[Byte] = value match {
+      case false => Array[Byte](0)
+      case true  => Array[Byte](1)
+    }
+
+    def getValue(bytes: Array[Byte]): Boolean = Bytes.toBoolean(bytes)
+
+  }
 
   object ConvertByte {
 

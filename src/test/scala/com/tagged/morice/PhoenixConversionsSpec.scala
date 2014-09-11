@@ -11,6 +11,21 @@ class PhoenixConversionsSpec extends Specification with DataTables {
     def compare(a:Array[Byte], b:Array[Byte]) = Bytes.compareTo(a, b)
   }
 
+  "ConvertBoolean" should {
+
+    "convert symmetrically" in {
+      "value" | "expectedBytes"                         |>
+        false ! Array(0) |
+        true  ! Array(1) | { (value, expectedBytes ) =>
+        val bytes = ConvertBoolean.getBytes(value)
+        val result = ConvertBoolean.getValue(bytes)
+        bytes must beEqualTo(expectedBytes)
+        result must beEqualTo(value)
+      }
+    }
+
+  }
+
   "ConvertByte" should {
 
     "convert symmetrically" in {
