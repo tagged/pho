@@ -1,9 +1,4 @@
-maurice
-=======
+morice
+======
 
-Another library for interacting with HBase.
-
-insert
-
-    
-
+Another client library for interacting with HBase.

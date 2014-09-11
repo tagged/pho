@@ -7,11 +7,11 @@ import org.specs2.mutable.Specification
 /**
  * This test requires that a test table be pre-created on the HBase cluster:
  *
- *     create 'MauriceConnectionSpec', 'family1', 'family2'
+ *     create 'MoriceConnectionSpec', 'family1', 'family2'
  */
 class MoriceConnectionSpec extends Specification {
 
-  val tableName = "MauriceConnectionSpec"
+  val tableName = "MoriceConnectionSpec"
   val family1 = "family1"
   val family2 = "family2"
 
@@ -22,7 +22,7 @@ class MoriceConnectionSpec extends Specification {
   }
 
   val connection = HConnectionManager.createConnection(configuration)
-  val maurice = new MoriceConnection(connection)
+  val morice = new MoriceConnection(connection)
 
   "withTable" should {
 
@@ -31,7 +31,7 @@ class MoriceConnectionSpec extends Specification {
       val qualifier = "primitiveReadWriteTest".getBytes
       val writeValue = System.nanoTime().toString.getBytes
 
-      val readResult = maurice.withTable(tableName) { table =>
+      val readResult = morice.withTable(tableName) { table =>
         val put = new Put(rowkey)
         put.add(family1.getBytes, qualifier, writeValue)
         table.put(put)
@@ -54,8 +54,8 @@ class MoriceConnectionSpec extends Specification {
       val value2 = System.nanoTime().toString.getBytes
 
       val insertMap = Map(column1 -> value1, column2 -> value2)
-      maurice.writeBytes(tableName, rowKey, insertMap)
-      val readResult = maurice.readBytes(tableName, rowKey, insertMap.keys)
+      morice.writeBytes(tableName, rowKey, insertMap)
+      val readResult = morice.readBytes(tableName, rowKey, insertMap.keys)
 
       // converting the values from arrays to strings allows this equality to work
       readResult.mapValues({ v => new String(v) }) must beEqualTo(insertMap.mapValues({ v => new String(v) }))
