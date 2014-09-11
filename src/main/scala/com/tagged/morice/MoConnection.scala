@@ -2,7 +2,7 @@ package com.tagged.morice
 
 import org.apache.hadoop.hbase.client.{Get, Put, HTableInterface, HConnection}
 
-class MoriceConnection(connection: HConnection) {
+class MoConnection(connection: HConnection) {
 
   def withTable[A](name: String)(block: HTableInterface => A) = {
     val table = connection.getTable(name)
@@ -13,7 +13,7 @@ class MoriceConnection(connection: HConnection) {
     }
   }
 
-  def writeBytes(tableName: String, rowKey: Array[Byte], values: Map[Morice.Column, Array[Byte]]) = {
+  def writeBytes(tableName: String, rowKey: Array[Byte], values: Map[MoColumn, Array[Byte]]) = {
     withTable(tableName) { table =>
       val put = new Put(rowKey)
       for (value <- values) {
@@ -24,7 +24,7 @@ class MoriceConnection(connection: HConnection) {
     }
   }
 
-  def readBytes(tableName: String, rowKey: Array[Byte], columns: Iterable[Morice.Column]): Map[Morice.Column, Array[Byte]] = {
+  def readBytes(tableName: String, rowKey: Array[Byte], columns: Iterable[MoColumn]): Map[MoColumn, Array[Byte]] = {
     withTable(tableName) { table =>
       val get = new Get(rowKey)
       for (column <- columns) {

@@ -9,7 +9,7 @@ import org.specs2.mutable.Specification
  *
  *     create 'MoriceConnectionSpec', 'family1', 'family2'
  */
-class MoriceConnectionSpec extends Specification {
+class MoConnectionSpec extends Specification {
 
   val tableName = "MoriceConnectionSpec"
   val family1 = "family1"
@@ -22,7 +22,7 @@ class MoriceConnectionSpec extends Specification {
   }
 
   val connection = HConnectionManager.createConnection(configuration)
-  val morice = new MoriceConnection(connection)
+  val morice = new MoConnection(connection)
 
   "withTable" should {
 
@@ -48,8 +48,8 @@ class MoriceConnectionSpec extends Specification {
 
     "let us write and read byte arrays by row key" in {
       val rowKey = System.nanoTime().toString.getBytes
-      val column1 = Morice.ColumnFamily(family1).column("byteArrayReadWriteTest1")
-      val column2 = Morice.ColumnFamily(family2).column("byteArrayReadWriteTest2")
+      val column1 = MoColumnFamily(family1).column("byteArrayReadWriteTest1")
+      val column2 = MoColumnFamily(family2).column("byteArrayReadWriteTest2")
       val value1 = System.nanoTime().toString.getBytes
       val value2 = System.nanoTime().toString.getBytes
 
