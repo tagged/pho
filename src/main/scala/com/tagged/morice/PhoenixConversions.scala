@@ -4,7 +4,7 @@ import org.apache.hadoop.hbase.util.Bytes
 
 object PhoenixConversions {
 
-  object ConvertBoolean {
+  object ConvertBoolean extends MoConverter[Boolean] {
 
     def getBytes(value: Boolean): Array[Byte] = value match {
       case false => Array[Byte](0)
@@ -15,7 +15,7 @@ object PhoenixConversions {
 
   }
 
-  object ConvertByte {
+  object ConvertByte extends MoConverter[Byte] {
 
     def getBytes(value: Byte): Array[Byte] = Array((value ^ Byte.MinValue).toByte)
 
@@ -23,7 +23,7 @@ object PhoenixConversions {
 
   }
 
-  object ConvertShort {
+  object ConvertShort extends MoConverter[Short] {
 
     def getBytes(value: Short): Array[Byte] = Bytes.toBytes((value ^ Short.MinValue).toShort)
 
@@ -31,7 +31,7 @@ object PhoenixConversions {
 
   }
 
-  object ConvertLong {
+  object ConvertLong extends MoConverter[Long] {
 
     def getBytes(value: Long): Array[Byte] = Bytes.toBytes(value ^ Long.MinValue)
 
@@ -39,7 +39,7 @@ object PhoenixConversions {
 
   }
 
-  object ConvertString {
+  object ConvertString extends MoConverter[String] {
 
     def getBytes(value: String): Array[Byte] = Bytes.toBytes(value)
 
