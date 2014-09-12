@@ -1,6 +1,7 @@
 package com.tagged.morice
 
-import org.apache.hadoop.hbase.client.{Get, Put, HTableInterface, HConnection}
+import org.apache.hadoop.hbase.client._
+import scala.collection.JavaConverters._
 
 class MoConnection(connection: HConnection) {
 
@@ -13,7 +14,18 @@ class MoConnection(connection: HConnection) {
     }
   }
 
-  def write[T](tableName: String, rowKey: Array[Byte], values: Iterable[MoValue[T]]) = {
+  def withScanner[A](name: String, scan: Scan)(block: Iterable[Result] => A) = {
+    withTable(name) { table =>
+      val scanner = table.getScanner(scan)
+      try {
+        block(scanner.asScala)
+      } finally {
+        scanner.close()
+      }
+    }
+  }
+
+  def write[T](tableName: String, rowKey: Array[Byte], values: Iterable[MoCell[T]]) = {
     withTable(tableName) { table =>
       val put = new Put(rowKey)
       for (value <- values) {
@@ -24,7 +36,7 @@ class MoConnection(connection: HConnection) {
     }
   }
 
-  def read[T](tableName: String, rowKey: Array[Byte], columns: Iterable[MoColumn[T]]): Iterable[MoValue[T]] = {
+  def read[T](tableName: String, rowKey: Array[Byte], columns: Iterable[MoColumn[T]]): Iterable[MoCell[T]] = {
     withTable(tableName) { table =>
       val get = new Get(rowKey)
       for (column <- columns) {
@@ -32,7 +44,7 @@ class MoConnection(connection: HConnection) {
       }
       val result = table.get(get)
       for (column <- columns) yield  {
-        column.getValue(result.getValue(column.family.getBytes, column.getBytes))
+        column.getCell(result.getValue(column.family.getBytes, column.getBytes))
       }
     }
   }

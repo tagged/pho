@@ -1,6 +1,6 @@
 package com.tagged.morice
 
-case class MoValue[T](column: MoColumn[T], value: Option[T]) {
+case class MoCell[T](column: MoColumn[T], value: Option[T]) {
 
   def this(column: MoColumn[T], value: T) = this(column, Option(value))
 

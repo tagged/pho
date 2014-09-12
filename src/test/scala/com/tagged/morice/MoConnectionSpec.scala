@@ -2,7 +2,7 @@ package com.tagged.morice
 
 import com.tagged.morice.PhoenixConversions.StringConverter
 import org.apache.hadoop.hbase.HBaseConfiguration
-import org.apache.hadoop.hbase.client.{Get, Put, HConnectionManager}
+import org.apache.hadoop.hbase.client.{Scan, Get, Put, HConnectionManager}
 import org.specs2.mutable.Specification
 
 /**
@@ -49,20 +49,47 @@ class MoConnectionSpec extends Specification {
 
   }
 
+  "withScanner" should {
+
+    "let us scan using primitives" in {
+      val now = System.nanoTime()
+      val column = MoColumnFamily(family1).column("resultSetTest", StringConverter)
+
+      // write some rows
+      for ((i, word) <- Map(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) {
+        val rowKey = ("readSet." + now + "." + i).getBytes
+        val cell = new MoCell(column, word)
+        morice.write(tableName, rowKey, Array(cell))
+      }
+
+      val startRow = ("readSet." + now).getBytes
+      val endRow = ("readSet." + (now + 1)).getBytes
+      val scan = new Scan(startRow, endRow)
+      val readResult = morice.withScanner(tableName, scan) { results =>
+        for (result <- results) yield {
+          val cell = column.getCell(result)
+          cell.value.get
+        }
+      }
+
+      readResult must beEqualTo(List("one", "two", "three", "four", "five", "six", "seven", "eight", "nine"))
+    }
+  }
+
   "write/read single row key" should {
 
     "let us write and read specific column values" in {
       val rowKey = System.nanoTime().toString.getBytes
       val column1 = MoColumnFamily(family1).column("columnReadWriteTest1", StringConverter)
       val column2 = MoColumnFamily(family2).column("columnReadWriteTest2", StringConverter)
-      val value1 = new MoValue(column1, System.nanoTime().toString)
-      val value2 = new MoValue(column2, System.nanoTime().toString)
+      val cell1 = new MoCell(column1, System.nanoTime().toString)
+      val cell2 = new MoCell(column2, System.nanoTime().toString)
 
-      val values = Array(value1, value2)
-      morice.write(tableName, rowKey, values)
+      val cells = Array(cell1, cell2)
+      morice.write(tableName, rowKey, cells)
       val readResult = morice.read(tableName, rowKey, Array(column1, column2))
 
-      readResult.toArray must beEqualTo(values)
+      readResult.toArray must beEqualTo(cells)
     }
 
     "read empty column values as None" in {
@@ -71,7 +98,7 @@ class MoConnectionSpec extends Specification {
 
       val readResult = morice.read(tableName, rowKey, Array(column))
 
-      readResult.toArray must beEqualTo(Array(MoValue(column, None)))
+      readResult.toArray must beEqualTo(Array(MoCell(column, None)))
     }
 
   }
