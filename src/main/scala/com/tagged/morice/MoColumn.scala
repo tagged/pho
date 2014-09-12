@@ -6,8 +6,10 @@ case class MoColumn[T](family: MoColumnFamily, name: String, converter: MoConver
 
   lazy val getBytes: Array[Byte] = name.getBytes
 
-  def getCell(result: Result): MoCell[T] = getCell(result.getValue(family.getBytes, getBytes))
-
-  def getCell(bytes: Array[Byte]): MoCell[T] = new MoCell(this, converter.getValue(bytes))
+  def getCell(result: Result): MoCell[T] = {
+    val bytes = result.getValue(family.getBytes, getBytes)
+    val value = converter.getValue(bytes)
+    new MoCell(this, value)
+  }
 
 }

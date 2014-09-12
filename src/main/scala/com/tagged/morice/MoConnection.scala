@@ -44,7 +44,7 @@ class MoConnection(connection: HConnection) {
       }
       val result = table.get(get)
       for (column <- columns) yield  {
-        column.getCell(result.getValue(column.family.getBytes, column.getBytes))
+        column.getCell(result)
       }
     }
   }
