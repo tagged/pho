@@ -11,14 +11,14 @@ class PhoenixConversionsSpec extends Specification with DataTables {
     def compare(a:Array[Byte], b:Array[Byte]) = Bytes.compareTo(a, b)
   }
 
-  "ConvertBoolean" should {
+  "BooleanConverter" should {
 
     "convert symmetrically" in {
       "value" | "expectedBytes" |>
       false   ! Array(0)        |
       true    ! Array(1)        | { (value, expectedBytes ) =>
-        val bytes = ConvertBoolean.getBytes(value)
-        val result = ConvertBoolean.getValue(bytes)
+        val bytes = BooleanConverter.getBytes(value)
+        val result = BooleanConverter.getValue(bytes)
         bytes must beEqualTo(expectedBytes)
         result must beEqualTo(value)
       }
@@ -26,7 +26,7 @@ class PhoenixConversionsSpec extends Specification with DataTables {
 
   }
 
-  "ConvertByte" should {
+  "ByteConverter" should {
 
     "convert symmetrically" in {
       "value"          | "expectedBytes" |>
@@ -35,8 +35,8 @@ class PhoenixConversionsSpec extends Specification with DataTables {
       Byte.MinValue    ! Array(   0)     |
       -3.toByte        ! Array( 125)     |
       3.toByte         ! Array(-125)     | { (value, expectedBytes) =>
-        val bytes = ConvertByte.getBytes(value)
-        val result = ConvertByte.getValue(bytes)
+        val bytes = ByteConverter.getBytes(value)
+        val result = ByteConverter.getValue(bytes)
         bytes must beEqualTo(expectedBytes)
         result must beEqualTo(value)
       }
@@ -44,13 +44,13 @@ class PhoenixConversionsSpec extends Specification with DataTables {
 
     "have a lexicographic ordering matching the normal numeric ordering" in {
       val numericOrdering = Seq[Byte](Byte.MinValue, -3, 0, 3, Byte.MaxValue)
-      val bytes = numericOrdering.map(ConvertByte.getBytes)
+      val bytes = numericOrdering.map(ByteConverter.getBytes)
       bytes must beSorted
     }
 
   }
 
-  "ConvertShort" should {
+  "ShortConverter" should {
 
     "convert symmetrically" in {
       "value"        | "expectedBytes" |>
@@ -59,8 +59,8 @@ class PhoenixConversionsSpec extends Specification with DataTables {
       Short.MinValue ! Array(   0,  0) |
       -3.toShort     ! Array( 127, -3) |
       3.toShort      ! Array(-128,  3) | { (value, expectedBytes) =>
-        val bytes = ConvertShort.getBytes(value)
-        val result = ConvertShort.getValue(bytes)
+        val bytes = ShortConverter.getBytes(value)
+        val result = ShortConverter.getValue(bytes)
         bytes must beEqualTo(expectedBytes)
         result must beEqualTo(value)
       }
@@ -68,13 +68,13 @@ class PhoenixConversionsSpec extends Specification with DataTables {
 
     "have a lexicographic ordering matching the normal numeric ordering" in {
       val numericOrdering = Seq[Short](Short.MinValue, -3, 0, 3, Short.MaxValue)
-      val bytes = numericOrdering.map(ConvertShort.getBytes)
+      val bytes = numericOrdering.map(ShortConverter.getBytes)
       bytes must beSorted
     }
 
   }
 
-  "ConvertLong" should {
+  "LongConverter" should {
 
     "convert symmetrically" in {
       "value"       | "expectedBytes"                         |>
@@ -83,8 +83,8 @@ class PhoenixConversionsSpec extends Specification with DataTables {
       Long.MinValue ! Array(   0,  0,  0,  0,  0,  0,  0,  0) |
       -3L           ! Array( 127, -1, -1, -1, -1, -1, -1, -3) |
       3L            ! Array(-128,  0,  0,  0,  0,  0,  0,  3) | { (value, expectedBytes) =>
-        val bytes = ConvertLong.getBytes(value)
-        val result = ConvertLong.getValue(bytes)
+        val bytes = LongConverter.getBytes(value)
+        val result = LongConverter.getValue(bytes)
         bytes must beEqualTo(expectedBytes)
         result must beEqualTo(value)
       }
@@ -92,21 +92,21 @@ class PhoenixConversionsSpec extends Specification with DataTables {
 
     "have a lexicographic ordering matching the normal numeric ordering" in {
       val numericOrdering = Seq[Long](Long.MinValue, Long.MinValue / 2, -3L, 0L, 3L, Long.MaxValue / 2, Long.MaxValue)
-      val bytes = numericOrdering.map(ConvertLong.getBytes)
+      val bytes = numericOrdering.map(LongConverter.getBytes)
       bytes must beSorted
     }
 
   }
 
-  "ConvertString" should {
+  "StringConverter" should {
 
     "convert symmetrically" in {
       "value"         | "expectedBytes"                       |>
       "Hello"        !! Array(72, 101, 108, 108, 111)         |
       "中國"           !! Array(-28, -72, -83, -27, -100, -117) |
       "\uD83D\uDCA9" !! Array(-16, -97, -110, -87)            | { (value, expectedBytes) =>
-        val bytes = ConvertString.getBytes(value)
-        val result = ConvertString.getValue(bytes)
+        val bytes = StringConverter.getBytes(value)
+        val result = StringConverter.getValue(bytes)
         bytes must beEqualTo(expectedBytes)
         result must beEqualTo(value)
       }
