@@ -4,6 +4,6 @@ case class MoColumnFamily(name: String) {
 
   lazy val getBytes = name.getBytes
 
-  def column(name: String) = new MoColumn(this, name)
+  def column[T](name: String, converter: MoConverter[T]) = new MoColumn(this, name, converter)
 
 }

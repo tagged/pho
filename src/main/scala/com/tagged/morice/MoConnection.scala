@@ -13,27 +13,27 @@ class MoConnection(connection: HConnection) {
     }
   }
 
-  def writeBytes(tableName: String, rowKey: Array[Byte], values: Map[MoColumn, Array[Byte]]) = {
+  def write[T](tableName: String, rowKey: Array[Byte], values: Iterable[MoValue[T]]) = {
     withTable(tableName) { table =>
       val put = new Put(rowKey)
       for (value <- values) {
-        put.add(value._1.family.getBytes, value._1.getBytes, value._2)
+        put.add(value.column.family.getBytes, value.column.getBytes, value.getBytes)
       }
       table.put(put)
       table.flushCommits()
     }
   }
 
-  def readBytes(tableName: String, rowKey: Array[Byte], columns: Iterable[MoColumn]): Map[MoColumn, Array[Byte]] = {
+  def read[T](tableName: String, rowKey: Array[Byte], columns: Iterable[MoColumn[T]]): Iterable[MoValue[T]] = {
     withTable(tableName) { table =>
       val get = new Get(rowKey)
       for (column <- columns) {
         get.addColumn(column.family.getBytes, column.getBytes)
       }
       val result = table.get(get)
-      columns.map({ column =>
-        column -> result.getValue(column.family.getBytes, column.getBytes)
-      }).toMap
+      for (column <- columns) yield  {
+        column.getValue(result.getValue(column.family.getBytes, column.getBytes))
+      }
     }
   }
 

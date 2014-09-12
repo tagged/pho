@@ -1,7 +1,9 @@
 package com.tagged.morice
 
-case class MoColumn(family: MoColumnFamily, name: String) {
+case class MoColumn[T](family: MoColumnFamily, name: String, converter: MoConverter[T]) {
 
-  lazy val getBytes = name.getBytes
+  lazy val getBytes: Array[Byte] = name.getBytes
+
+  def getValue(bytes: Array[Byte]): MoValue[T] = MoValue(this, converter.getValue(bytes))
 
 }

@@ -1,5 +1,6 @@
 package com.tagged.morice
 
+import com.tagged.morice.PhoenixConversions.StringConverter
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.{Get, Put, HConnectionManager}
 import org.specs2.mutable.Specification
@@ -48,17 +49,16 @@ class MoConnectionSpec extends Specification {
 
     "let us write and read byte arrays by row key" in {
       val rowKey = System.nanoTime().toString.getBytes
-      val column1 = MoColumnFamily(family1).column("byteArrayReadWriteTest1")
-      val column2 = MoColumnFamily(family2).column("byteArrayReadWriteTest2")
-      val value1 = System.nanoTime().toString.getBytes
-      val value2 = System.nanoTime().toString.getBytes
+      val column1 = MoColumnFamily(family1).column("columnReadWriteTest1", StringConverter)
+      val column2 = MoColumnFamily(family2).column("columnReadWriteTest2", StringConverter)
+      val value1 = MoValue(column1, System.nanoTime().toString)
+      val value2 = MoValue(column2, System.nanoTime().toString)
 
-      val insertMap = Map(column1 -> value1, column2 -> value2)
-      morice.writeBytes(tableName, rowKey, insertMap)
-      val readResult = morice.readBytes(tableName, rowKey, insertMap.keys)
+      val values = Array(value1, value2)
+      morice.write(tableName, rowKey, values)
+      val readResult = morice.read(tableName, rowKey, Array(column1, column2))
 
-      // converting the values from arrays to strings allows this equality to work
-      readResult.mapValues({ v => new String(v) }) must beEqualTo(insertMap.mapValues({ v => new String(v) }))
+      readResult.toArray must beEqualTo(values)
     }
 
   }
