@@ -1,7 +1,9 @@
 package com.tagged.morice
 
-case class MoValue[T](column: MoColumn[T], value: T) {
+case class MoValue[T](column: MoColumn[T], value: Option[T]) {
 
-  def getBytes: Array[Byte] = column.converter.getBytes(value)
+  def this(column: MoColumn[T], value: T) = this(column, Option(value))
+
+  def getBytes: Array[Byte] = column.converter.getBytes(value.get)
 
 }

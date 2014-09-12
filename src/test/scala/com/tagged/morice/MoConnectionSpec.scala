@@ -27,18 +27,18 @@ class MoConnectionSpec extends Specification {
 
   "withTable" should {
 
-    "let us write and read using HTableInterface primitives" in {
-      val rowkey = System.nanoTime().toString.getBytes
+    "let us put and get using HTableInterface primitives" in {
+      val rowKey = System.nanoTime().toString.getBytes
       val qualifier = "primitiveReadWriteTest".getBytes
       val writeValue = System.nanoTime().toString.getBytes
 
       val readResult = morice.withTable(tableName) { table =>
-        val put = new Put(rowkey)
+        val put = new Put(rowKey)
         put.add(family1.getBytes, qualifier, writeValue)
         table.put(put)
         table.flushCommits()
 
-        val get = new Get(rowkey)
+        val get = new Get(rowKey)
         get.addColumn(family1.getBytes, qualifier)
         val result = table.get(get)
         result.getValue(family1.getBytes, qualifier)
@@ -47,18 +47,31 @@ class MoConnectionSpec extends Specification {
       readResult must beEqualTo(writeValue)
     }
 
-    "let us write and read byte arrays by row key" in {
+  }
+
+  "write/read single row key" should {
+
+    "let us write and read specific column values" in {
       val rowKey = System.nanoTime().toString.getBytes
       val column1 = MoColumnFamily(family1).column("columnReadWriteTest1", StringConverter)
       val column2 = MoColumnFamily(family2).column("columnReadWriteTest2", StringConverter)
-      val value1 = MoValue(column1, System.nanoTime().toString)
-      val value2 = MoValue(column2, System.nanoTime().toString)
+      val value1 = new MoValue(column1, System.nanoTime().toString)
+      val value2 = new MoValue(column2, System.nanoTime().toString)
 
       val values = Array(value1, value2)
       morice.write(tableName, rowKey, values)
       val readResult = morice.read(tableName, rowKey, Array(column1, column2))
 
       readResult.toArray must beEqualTo(values)
+    }
+
+    "read empty column values as None" in {
+      val rowKey = ("emptyReadTest" + System.nanoTime()).getBytes
+      val column = MoColumnFamily(family1).column("emptyReadTest", StringConverter)
+
+      val readResult = morice.read(tableName, rowKey, Array(column))
+
+      readResult.toArray must beEqualTo(Array(MoValue(column, None)))
     }
 
   }
