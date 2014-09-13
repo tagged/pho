@@ -1,6 +1,7 @@
 package com.tagged.morice
 
-import com.tagged.morice.MoConverter.{InvertConverter, IdentityConverter}
+import com.tagged.morice.MoConverter._
+import com.tagged.morice.PhoenixConversions.LongConverter
 import org.specs2.matcher.DataTables
 import org.specs2.mutable.Specification
 
@@ -33,6 +34,20 @@ class MoConverterSpec extends Specification with DataTables {
         getBytesResult must beEqualTo(expectedInversion)
         getValueResult must beEqualTo(bytes)
       }
+    }
+
+  }
+
+  "Tuple2Converter" should {
+
+    "symmetrically convert" in {
+      val input = (3L, -3L)
+      val expectedBytes = Array[Byte](-128, 0, 0, 0, 0, 0, 0, 3, 127, -1, -1, -1, -1, -1, -1, -3)
+      val converter = Tuple2Converter(LongConverter, LongConverter)
+      val bytes = converter.getBytes(input)
+      val result = converter.getValue(bytes)
+      bytes must beEqualTo(expectedBytes)
+      result must beEqualTo(input)
     }
 
   }
