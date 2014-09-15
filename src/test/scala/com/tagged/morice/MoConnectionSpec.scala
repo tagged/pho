@@ -137,11 +137,25 @@ class MoConnectionSpec extends Specification {
         MoRowKey("querySet." + now + ".", StringConverter),
         MoRowKey("querySet." + now + "z", StringConverter),
         Seq(column),
-        limit = 5
+        Seq(MoFilter.LimitFilter(5))
       )
       val result = morice.read(tableName, query)
 
       result must beEqualTo(docs.slice(0, 5))
+    }
+
+
+    "let us find elements using an equality filter" in {
+      val searchCell = docs.slice(4,5).head.values.head
+      val query = MoQuery(
+        MoRowKey("querySet." + now + ".", StringConverter),
+        MoRowKey("querySet." + now + "z", StringConverter),
+        Seq(column),
+        Seq(MoFilter.CellEqualsFilter(searchCell), MoFilter.LimitFilter(3))
+      )
+      val result = morice.read(tableName, query)
+
+      result must beEqualTo(docs.slice(4, 5))
     }
 
   }
