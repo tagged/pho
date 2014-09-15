@@ -60,7 +60,7 @@ class MoConnectionSpec extends Specification {
       for ((i, word) <- Map(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) {
         val doc = new MoDocument(
           MoRowKey("readSet." + now + "." + i, StringConverter),
-          Array(MoCell(column, word))
+          Seq(MoCell(column, word))
         )
         morice.write(tableName, doc)
       }
@@ -79,31 +79,30 @@ class MoConnectionSpec extends Specification {
   "write/read single row key" should {
 
     "let us write and read specific column values" in {
-      val rowKey = MoRowKey(System.nanoTime().toString, StringConverter)
       val column1 = MoColumn(family1, "columnReadWriteTest1", StringConverter)
       val column2 = MoColumn(family2, "columnReadWriteTest2", StringConverter)
-      val cell1 = new MoCell(column1, System.nanoTime().toString)
-      val cell2 = new MoCell(column2, System.nanoTime().toString)
-      val cells = Array(cell1, cell2)
 
       val doc = MoDocument(
-        rowKey,
-        cells
+        MoRowKey(System.nanoTime().toString, StringConverter),
+        Seq(
+          MoCell(column1, System.nanoTime().toString),
+          MoCell(column2, System.nanoTime().toString)
+        )
       )
 
       morice.write(tableName, doc)
-      val readResult = morice.read(tableName, rowKey, Array(column1, column2))
+      val readResult = morice.read(tableName, doc.key, doc.values.map(_.column))
 
-      readResult.toArray must beEqualTo(cells)
+      readResult must beEqualTo(doc.values)
     }
 
     "read empty column values as None" in {
       val rowKey = MoRowKey("emptyReadTest" + System.nanoTime(), StringConverter)
       val column = MoColumn(family1, "emptyReadTest", StringConverter)
 
-      val readResult = morice.read(tableName, rowKey, Array(column))
+      val readResult = morice.read(tableName, rowKey, Seq(column))
 
-      readResult.toArray must beEmpty
+      readResult must beEmpty
     }
 
   }
