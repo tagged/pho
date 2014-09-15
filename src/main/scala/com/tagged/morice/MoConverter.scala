@@ -16,7 +16,7 @@ object MoConverter {
 
   case class ConverterToken[T](bytes: Array[Byte], value: T)
 
-  object IdentityConverter extends MoConverter[Array[Byte]] {
+  case object IdentityConverter extends MoConverter[Array[Byte]] {
 
     def toBytes(value: Array[Byte]): Array[Byte] = value
 

@@ -5,7 +5,7 @@ import org.apache.hadoop.hbase.util.Bytes
 
 object PhoenixConversions {
 
-  object BooleanConverter extends MoConverter[Boolean] {
+  case object BooleanConverter extends MoConverter[Boolean] {
 
     val sizeOf = 1
 
@@ -21,7 +21,7 @@ object PhoenixConversions {
 
   }
 
-  object ByteConverter extends MoConverter[Byte] {
+  case object ByteConverter extends MoConverter[Byte] {
 
     val sizeOf = 1
 
@@ -34,7 +34,7 @@ object PhoenixConversions {
 
   }
 
-  object ShortConverter extends MoConverter[Short] {
+  case object ShortConverter extends MoConverter[Short] {
 
     val sizeOf = 2
 
@@ -47,7 +47,7 @@ object PhoenixConversions {
 
   }
 
-  object LongConverter extends MoConverter[Long] {
+  case object LongConverter extends MoConverter[Long] {
 
     val sizeOf = 8
 
@@ -60,7 +60,7 @@ object PhoenixConversions {
 
   }
 
-  object StringConverter extends MoConverter[String] {
+  case object StringConverter extends MoConverter[String] {
 
     def toBytes(value: String): Array[Byte] = Bytes.toBytes(value)
 
