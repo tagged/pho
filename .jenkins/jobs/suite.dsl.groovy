@@ -18,6 +18,8 @@ def build = project.basicJob {
     jdk 'jdk 6u43'
     label 'scala'
 
+    triggers { githubPush() }
+
     steps {
         sbt(
             'sbt',
