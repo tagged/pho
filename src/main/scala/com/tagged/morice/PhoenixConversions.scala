@@ -9,7 +9,7 @@ object PhoenixConversions {
 
     val sizeOf = 1
 
-    def getBytes(value: Boolean): Array[Byte] = value match {
+    def toBytes(value: Boolean): Array[Byte] = value match {
       case false => Array[Byte](0)
       case true  => Array[Byte](1)
     }
@@ -25,7 +25,7 @@ object PhoenixConversions {
 
     val sizeOf = 1
 
-    def getBytes(value: Byte): Array[Byte] = Array((value ^ Byte.MinValue).toByte)
+    def toBytes(value: Byte): Array[Byte] = Array((value ^ Byte.MinValue).toByte)
 
     def getToken(bytes: Array[Byte]): ConverterToken[Byte] = {
       val token = bytes.slice(0, sizeOf)
@@ -38,7 +38,7 @@ object PhoenixConversions {
 
     val sizeOf = 2
 
-    def getBytes(value: Short): Array[Byte] = Bytes.toBytes((value ^ Short.MinValue).toShort)
+    def toBytes(value: Short): Array[Byte] = Bytes.toBytes((value ^ Short.MinValue).toShort)
 
     def getToken(bytes: Array[Byte]): ConverterToken[Short] = {
       val token = bytes.slice(0, sizeOf)
@@ -51,7 +51,7 @@ object PhoenixConversions {
 
     val sizeOf = 8
 
-    def getBytes(value: Long): Array[Byte] = Bytes.toBytes(value ^ Long.MinValue)
+    def toBytes(value: Long): Array[Byte] = Bytes.toBytes(value ^ Long.MinValue)
 
     def getToken(bytes: Array[Byte]): ConverterToken[Long] = {
       val token = bytes.slice(0, sizeOf)
@@ -62,7 +62,7 @@ object PhoenixConversions {
 
   object StringConverter extends MoConverter[String] {
 
-    def getBytes(value: String): Array[Byte] = Bytes.toBytes(value)
+    def toBytes(value: String): Array[Byte] = Bytes.toBytes(value)
 
     def getToken(bytes: Array[Byte]): ConverterToken[String] = {
       ConverterToken(bytes, Bytes.toString(bytes))

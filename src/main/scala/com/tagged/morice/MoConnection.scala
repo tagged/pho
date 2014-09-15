@@ -27,9 +27,9 @@ class MoConnection(connection: HConnection) {
 
   def write[A,B](tableName: String, rowKey: MoRowKey[A], values: Iterable[MoCell[B]]) = {
     withTable(tableName) { table =>
-      val put = new Put(rowKey.getBytes)
+      val put = new Put(rowKey.toBytes)
       for (value <- values) {
-        put.add(value.column.family.getBytes, value.column.getBytes, value.getBytes)
+        put.add(value.column.family.toBytes, value.column.toBytes, value.toBytes)
       }
       table.put(put)
       table.flushCommits()
@@ -38,9 +38,9 @@ class MoConnection(connection: HConnection) {
 
   def read[A,B](tableName: String, rowKey: MoRowKey[A], columns: Iterable[MoColumn[B]]): Iterable[MoCell[B]] = {
     withTable(tableName) { table =>
-      val get = new Get(rowKey.getBytes)
+      val get = new Get(rowKey.toBytes)
       for (column <- columns) {
-        get.addColumn(column.family.getBytes, column.getBytes)
+        get.addColumn(column.family.toBytes, column.toBytes)
       }
       val result = table.get(get)
       for (column <- columns) yield  {

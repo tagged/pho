@@ -3,6 +3,7 @@ package com.tagged.morice
 import com.tagged.morice.PhoenixConversions.StringConverter
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.{Scan, Get, Put, HConnectionManager}
+import org.apache.hadoop.hbase.util.Bytes
 import org.specs2.mutable.Specification
 
 /**
@@ -28,20 +29,20 @@ class MoConnectionSpec extends Specification {
   "withTable" should {
 
     "let us put and get using HTableInterface primitives" in {
-      val rowKey = System.nanoTime().toString.getBytes
-      val qualifier = "primitiveReadWriteTest".getBytes
-      val writeValue = System.nanoTime().toString.getBytes
+      val rowKey = Bytes.toBytes(System.nanoTime().toString)
+      val qualifier = Bytes.toBytes("primitiveReadWriteTest")
+      val writeValue = Bytes.toBytes(System.nanoTime().toString)
 
       val readResult = morice.withTable(tableName) { table =>
         val put = new Put(rowKey)
-        put.add(family1.getBytes, qualifier, writeValue)
+        put.add(family1.toBytes, qualifier, writeValue)
         table.put(put)
         table.flushCommits()
 
         val get = new Get(rowKey)
-        get.addColumn(family1.getBytes, qualifier)
+        get.addColumn(family1.toBytes, qualifier)
         val result = table.get(get)
-        result.getValue(family1.getBytes, qualifier)
+        result.getValue(family1.toBytes, qualifier)
       }
 
       readResult must beEqualTo(writeValue)
@@ -62,8 +63,8 @@ class MoConnectionSpec extends Specification {
         morice.write(tableName, rowKey, Array(cell))
       }
 
-      val startRow = ("readSet." + now).getBytes
-      val endRow = ("readSet." + (now + 1)).getBytes
+      val startRow = Bytes.toBytes("readSet." + now)
+      val endRow = Bytes.toBytes("readSet." + (now + 1))
       val scan = new Scan(startRow, endRow)
       val readResult = morice.withScanner(tableName, scan) { results =>
         for (result <- results) yield {

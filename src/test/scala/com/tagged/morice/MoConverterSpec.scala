@@ -13,9 +13,9 @@ class MoConverterSpec extends Specification with DataTables {
       "bytes"               |>
       Array[Byte](23)       |
       Array[Byte](-3, 4, 3) | { (bytes: Array[Byte]) =>
-        val getBytesResult = IdentityConverter.getBytes(bytes)
+        val toBytesResult = IdentityConverter.toBytes(bytes)
         val getValueResult = IdentityConverter.getValue(bytes)
-        getBytesResult must beEqualTo(bytes)
+        toBytesResult must beEqualTo(bytes)
         getValueResult must beEqualTo(bytes)
       }
     }
@@ -29,9 +29,9 @@ class MoConverterSpec extends Specification with DataTables {
       Array[Byte](23)       ! Array(~23)           |
       Array[Byte](-3, 4, 3) ! Array(~(-3), ~4, ~3) | { (bytes, expectedInversion) =>
         val converter = InvertConverter(IdentityConverter)
-        val getBytesResult = converter.getBytes(bytes)
-        val getValueResult = converter.getValue(getBytesResult)
-        getBytesResult must beEqualTo(expectedInversion)
+        val toBytesResult = converter.toBytes(bytes)
+        val getValueResult = converter.getValue(toBytesResult)
+        toBytesResult must beEqualTo(expectedInversion)
         getValueResult must beEqualTo(bytes)
       }
     }
@@ -44,7 +44,7 @@ class MoConverterSpec extends Specification with DataTables {
       val input = (3L, -3L)
       val expectedBytes = Array[Byte](-128, 0, 0, 0, 0, 0, 0, 3, 127, -1, -1, -1, -1, -1, -1, -3)
       val converter = Tuple2Converter(LongConverter, LongConverter)
-      val bytes = converter.getBytes(input)
+      val bytes = converter.toBytes(input)
       val result = converter.getValue(bytes)
       bytes must beEqualTo(expectedBytes)
       result must beEqualTo(input)

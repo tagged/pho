@@ -4,7 +4,7 @@ import com.tagged.morice.MoConverter.ConverterToken
 
 trait MoConverter[T] {
 
-  def getBytes(value: T): Array[Byte]
+  def toBytes(value: T): Array[Byte]
 
   def getToken(bytes: Array[Byte]): ConverterToken[T]
 
@@ -18,7 +18,7 @@ object MoConverter {
 
   object IdentityConverter extends MoConverter[Array[Byte]] {
 
-    def getBytes(value: Array[Byte]): Array[Byte] = value
+    def toBytes(value: Array[Byte]): Array[Byte] = value
 
     def getToken(bytes: Array[Byte]): ConverterToken[Array[Byte]] = ConverterToken(bytes, bytes)
 
@@ -26,7 +26,7 @@ object MoConverter {
 
   case class InvertConverter[T](inner: MoConverter[T]) extends MoConverter[T] {
 
-    def getBytes(value: T): Array[Byte] = inner.getBytes(value).map({ b => (~b).toByte })
+    def toBytes(value: T): Array[Byte] = inner.toBytes(value).map({ b => (~b).toByte })
 
     def getToken(bytes: Array[Byte]): ConverterToken[T] = {
       val inverted = bytes.map({ b => (~b).toByte })
@@ -37,7 +37,7 @@ object MoConverter {
 
   case class Tuple2Converter[A,B](a: MoConverter[A], b: MoConverter[B]) extends MoConverter[Tuple2[A,B]] {
 
-    def getBytes(value: Tuple2[A,B]) = a.getBytes(value._1) ++ b.getBytes(value._2)
+    def toBytes(value: Tuple2[A,B]) = a.toBytes(value._1) ++ b.toBytes(value._2)
 
     def getToken(bytes: Array[Byte]): ConverterToken[Tuple2[A,B]] = {
       val token1 = a.getToken(bytes)
@@ -52,7 +52,7 @@ object MoConverter {
 
   case class Tuple3Converter[A,B,C](a: MoConverter[A], b: MoConverter[B], c: MoConverter[C]) extends MoConverter[Tuple3[A,B,C]] {
 
-    def getBytes(value: Tuple3[A,B,C]) = a.getBytes(value._1) ++ b.getBytes(value._2) ++ c.getBytes(value._3)
+    def toBytes(value: Tuple3[A,B,C]) = a.toBytes(value._1) ++ b.toBytes(value._2) ++ c.toBytes(value._3)
 
     def getToken(bytes: Array[Byte]): ConverterToken[Tuple3[A,B,C]] = {
       val token1 = a.getToken(bytes)
@@ -68,7 +68,7 @@ object MoConverter {
   }
 
   case class Tuple4Converter[A,B,C,D](a: MoConverter[A], b: MoConverter[B], c: MoConverter[C], d: MoConverter[D]) extends MoConverter[Tuple4[A,B,C,D]] {
-    def getBytes(value: Tuple4[A,B,C,D]) = a.getBytes(value._1) ++ b.getBytes(value._2) ++ c.getBytes(value._3) ++ d.getBytes(value._4)
+    def toBytes(value: Tuple4[A,B,C,D]) = a.toBytes(value._1) ++ b.toBytes(value._2) ++ c.toBytes(value._3) ++ d.toBytes(value._4)
 
     def getToken(bytes: Array[Byte]): ConverterToken[Tuple4[A,B,C,D]] = {
       val token1 = a.getToken(bytes)
