@@ -47,4 +47,18 @@ class MoConnection(connection: HConnection) {
     }
   }
 
+  def read[A,B](tableName: String, query: MoQuery[A,B]): Iterable[MoDocument[A,B]] = {
+    val scan = new Scan(query.startRow.toBytes, query.endRow.toBytes)
+    for (column <- query.columns) {
+      scan.addColumn(column.family.toBytes, column.toBytes)
+    }
+    withScanner(tableName, scan) { scanner =>
+      scanner.map({ result =>
+        val key = query.startRow.getRowKey(result)
+        val cells = query.columns.map(_.getCell(result)).flatten
+        MoDocument(key, cells)
+      })
+    }
+  }
+
 }

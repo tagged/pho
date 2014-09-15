@@ -107,4 +107,31 @@ class MoConnectionSpec extends Specification {
 
   }
 
+  "queries" should {
+
+    "let us read multiple documents at once" in {
+      val now = System.nanoTime()
+      val column = MoColumn(family1, "queryResultSetTest", StringConverter)
+
+      // write some rows
+      for ((i, word) <- Map(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) {
+        val doc = new MoDocument(
+          MoRowKey("querySet." + now + "." + i, StringConverter),
+          Seq(MoCell(column, word))
+        )
+        morice.write(tableName, doc)
+      }
+
+      val query = MoQuery(
+        MoRowKey("querySet." + now + ".", StringConverter),
+        MoRowKey("querySet." + now + "z", StringConverter),
+        Seq(column)
+      )
+      val result = morice.read(tableName, query)
+
+      result.map(_.values.head.value) must beEqualTo(List("one", "two", "three", "four", "five", "six", "seven", "eight", "nine"))
+    }
+
+  }
+
 }
