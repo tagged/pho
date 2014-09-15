@@ -12,3 +12,11 @@ libraryDependencies ++= {
     "org.specs2" %% "specs2" % "2.4.2" % "test"
   )
 }
+
+crossPaths := false
+
+publishMavenStyle := true
+
+publishTo := Some("artifactory01.tagged.com" at "http://artifactory.tagged.com:8081/artifactory/ext-release-local")
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
