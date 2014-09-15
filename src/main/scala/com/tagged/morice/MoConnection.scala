@@ -43,9 +43,7 @@ class MoConnection(connection: HConnection) {
         get.addColumn(column.family.toBytes, column.toBytes)
       }
       val result = table.get(get)
-      for (column <- columns) yield  {
-        column.getCell(result)
-      }
+      columns.map(_.getCell(result)).flatten
     }
   }
 

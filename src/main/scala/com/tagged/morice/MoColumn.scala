@@ -7,10 +7,15 @@ case class MoColumn[T](family: MoColumnFamily, name: String, converter: MoConver
 
   lazy val toBytes: Array[Byte] = Bytes.toBytes(name)
 
-  def getCell(result: Result): MoCell[T] = {
-    val bytes = result.getValue(family.toBytes, toBytes)
-    val value = converter.getValue(bytes)
-    new MoCell(this, value)
+  def getCell(result: Result): Option[MoCell[T]] = {
+    result.getValue(family.toBytes, toBytes) match {
+      case null => None
+      case bytes =>
+        converter.getValue(bytes) match {
+          case null => None
+          case value => Some(MoCell(this, value))
+        }
+    }
   }
 
 }

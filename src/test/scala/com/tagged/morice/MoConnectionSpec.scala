@@ -60,7 +60,7 @@ class MoConnectionSpec extends Specification {
       for ((i, word) <- Map(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) {
         val doc = new MoDocument(
           MoRowKey("readSet." + now + "." + i, StringConverter),
-          Array(new MoCell(column, word))
+          Array(MoCell(column, word))
         )
         morice.write(tableName, doc)
       }
@@ -69,10 +69,7 @@ class MoConnectionSpec extends Specification {
       val endRow = Bytes.toBytes("readSet." + (now + 1))
       val scan = new Scan(startRow, endRow)
       val readResult = morice.withScanner(tableName, scan) { results =>
-        for (result <- results) yield {
-          val cell = column.getCell(result)
-          cell.value.get
-        }
+        results.map(column.getCell).flatten.map(_.value)
       }
 
       readResult must beEqualTo(List("one", "two", "three", "four", "five", "six", "seven", "eight", "nine"))
@@ -106,7 +103,7 @@ class MoConnectionSpec extends Specification {
 
       val readResult = morice.read(tableName, rowKey, Array(column))
 
-      readResult.toArray must beEqualTo(Array(MoCell(column, None)))
+      readResult.toArray must beEmpty
     }
 
   }
