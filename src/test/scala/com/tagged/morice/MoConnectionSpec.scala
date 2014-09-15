@@ -58,9 +58,11 @@ class MoConnectionSpec extends Specification {
 
       // write some rows
       for ((i, word) <- Map(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) {
-        val rowKey = MoRowKey("readSet." + now + "." + i, StringConverter)
-        val cell = new MoCell(column, word)
-        morice.write(tableName, rowKey, Array(cell))
+        val doc = new MoDocument(
+          MoRowKey("readSet." + now + "." + i, StringConverter),
+          Array(new MoCell(column, word))
+        )
+        morice.write(tableName, doc)
       }
 
       val startRow = Bytes.toBytes("readSet." + now)
@@ -85,9 +87,14 @@ class MoConnectionSpec extends Specification {
       val column2 = MoColumn(family2, "columnReadWriteTest2", StringConverter)
       val cell1 = new MoCell(column1, System.nanoTime().toString)
       val cell2 = new MoCell(column2, System.nanoTime().toString)
-
       val cells = Array(cell1, cell2)
-      morice.write(tableName, rowKey, cells)
+
+      val doc = MoDocument(
+        rowKey,
+        cells
+      )
+
+      morice.write(tableName, doc)
       val readResult = morice.read(tableName, rowKey, Array(column1, column2))
 
       readResult.toArray must beEqualTo(cells)

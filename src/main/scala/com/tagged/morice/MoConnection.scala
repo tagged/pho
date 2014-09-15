@@ -25,10 +25,10 @@ class MoConnection(connection: HConnection) {
     }
   }
 
-  def write[A,B](tableName: String, rowKey: MoRowKey[A], values: Iterable[MoCell[B]]) = {
+  def write[A,B](tableName: String, doc: MoDocument[A,B]) = {
     withTable(tableName) { table =>
-      val put = new Put(rowKey.toBytes)
-      for (value <- values) {
+      val put = new Put(doc.key.toBytes)
+      for (value <- doc.values) {
         put.add(value.column.family.toBytes, value.column.toBytes, value.toBytes)
       }
       table.put(put)
