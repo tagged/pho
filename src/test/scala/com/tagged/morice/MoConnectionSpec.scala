@@ -132,6 +132,18 @@ class MoConnectionSpec extends Specification {
       result must beEqualTo(docs)
     }
 
+    "let us limit the length of the result set read" in {
+      val query = MoQuery(
+        MoRowKey("querySet." + now + ".", StringConverter),
+        MoRowKey("querySet." + now + "z", StringConverter),
+        Seq(column),
+        limit = 5
+      )
+      val result = morice.read(tableName, query)
+
+      result must beEqualTo(docs.slice(0, 5))
+    }
+
   }
 
 }
