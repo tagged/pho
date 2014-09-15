@@ -13,8 +13,8 @@ import org.specs2.mutable.Specification
 class MoConnectionSpec extends Specification {
 
   val tableName = "MoriceConnectionSpec"
-  val family1 = "family1"
-  val family2 = "family2"
+  val family1 = MoColumnFamily("family1")
+  val family2 = MoColumnFamily("family2")
 
   val configuration = HBaseConfiguration.create()
   scala.util.Properties.propOrNone("hbase.zookeeper.quorum") match {
@@ -53,7 +53,7 @@ class MoConnectionSpec extends Specification {
 
     "let us scan using primitives" in {
       val now = System.nanoTime()
-      val column = MoColumnFamily(family1).column("resultSetTest", StringConverter)
+      val column = MoColumn(family1, "resultSetTest", StringConverter)
 
       // write some rows
       for ((i, word) <- Map(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) {
@@ -80,8 +80,8 @@ class MoConnectionSpec extends Specification {
 
     "let us write and read specific column values" in {
       val rowKey = MoRowKey(System.nanoTime().toString, StringConverter)
-      val column1 = MoColumnFamily(family1).column("columnReadWriteTest1", StringConverter)
-      val column2 = MoColumnFamily(family2).column("columnReadWriteTest2", StringConverter)
+      val column1 = MoColumn(family1, "columnReadWriteTest1", StringConverter)
+      val column2 = MoColumn(family2, "columnReadWriteTest2", StringConverter)
       val cell1 = new MoCell(column1, System.nanoTime().toString)
       val cell2 = new MoCell(column2, System.nanoTime().toString)
 
@@ -94,7 +94,7 @@ class MoConnectionSpec extends Specification {
 
     "read empty column values as None" in {
       val rowKey = MoRowKey("emptyReadTest" + System.nanoTime(), StringConverter)
-      val column = MoColumnFamily(family1).column("emptyReadTest", StringConverter)
+      val column = MoColumn(family1, "emptyReadTest", StringConverter)
 
       val readResult = morice.read(tableName, rowKey, Array(column))
 
