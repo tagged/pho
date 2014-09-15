@@ -1,5 +1,5 @@
 @GrabResolver('https://artifactory.tagged.com/artifactory/libs-release-local/')
-@Grab('com.tagged.build:jenkins-dsl-common:0.1.18')
+@Grab('com.tagged.build:jenkins-dsl-common:0.1.22')
 
 import com.tagged.build.common.*
 
@@ -12,17 +12,13 @@ def project = new Project(jobFactory,
     ]
 )
 
-// TODO: hipchat
-
-def build = project.downstreamJob {
+def build = project.basicJob {
     name 'build'
     logRotator(-1, 25)
     jdk 'jdk 6u43'
     label 'scala'
 
     steps {
-        // TODO: re-implement hbase integration testing
-
         sbt(
             'sbt',
             'package',
