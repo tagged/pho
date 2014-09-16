@@ -1,5 +1,7 @@
 name := "morice"
 
+organization := "com.tagged"
+
 version := "0.1.0"
 
 libraryDependencies ++= {
