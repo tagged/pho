@@ -20,7 +20,7 @@ trait MoFilter {
 
 object MoFilter {
 
-  case class CellEqualsFilter[T](cell: MoCell[T]) extends MoFilter {
+  case class CellEqualsFilter(cell: MoCell[_]) extends MoFilter {
 
     lazy val getFilter = cell.equalsFilter
 

@@ -2,10 +2,10 @@ package com.tagged.morice
 
 import org.apache.hadoop.hbase.client.Scan
 
-case class MoQuery[A,B](
+case class MoQuery[A](
                          startRow: MoRowKey[A],
-                         endRow: MoRowKey[A],
-                         columns: Iterable[MoColumn[B]],
+                         endRow: MoRowKey[_],
+                         columns: Iterable[MoColumn[_]],
                          filters: Iterable[MoFilter] = Seq()
                          ) {
 

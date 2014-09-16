@@ -25,7 +25,7 @@ class MoConnection(connection: HConnection) {
     }
   }
 
-  def write[A](tableName: String, doc: MoDocument[A]) = {
+  def write(tableName: String, doc: MoDocument[_]) = {
     withTable(tableName) { table =>
       val put = new Put(doc.key.toBytes)
       for (value <- doc.values) {
@@ -36,7 +36,7 @@ class MoConnection(connection: HConnection) {
     }
   }
 
-  def read[A](tableName: String, rowKey: MoRowKey[A], columns: Iterable[MoColumn[_]]): Iterable[MoCell[_]] = {
+  def read(tableName: String, rowKey: MoRowKey[_], columns: Iterable[MoColumn[_]]): Iterable[MoCell[_]] = {
     withTable(tableName) { table =>
       val get = new Get(rowKey.toBytes)
       for (column <- columns) {
@@ -47,11 +47,11 @@ class MoConnection(connection: HConnection) {
     }
   }
 
-  def read[A,B](tableName: String, query: MoQuery[A,B]): Iterable[MoDocument[A]] = {
+  def read[A](tableName: String, query: MoQuery[A]): Iterable[MoDocument[A]] = {
     withScanner(tableName, query.getScan) { scanner =>
       scanner.map({ result =>
         val key = query.startRow.getRowKey(result)
-        val cells = query.columns.map(_.getCell(result)).flatten
+        val cells = query.columns.map(_.getCell(result).getOrElse(null)).filter(_ != null)
         MoDocument(key, cells)
       })
     }
