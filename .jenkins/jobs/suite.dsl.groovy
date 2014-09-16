@@ -23,7 +23,7 @@ def build = project.basicJob {
     steps {
         sbt(
             'sbt',
-            'package',
+            'publish',
             ('-Dsbt.log.noformat=true' +
              '-XX:PermSize=256M ' +
              '-XX:MaxPermSize=512M')
