@@ -74,6 +74,30 @@ class PhoenixConversionsSpec extends Specification with DataTables {
 
   }
 
+  "IntConverter" should {
+
+    "convert symmetrically" in {
+      "value"        | "expectedBytes"                         |>
+        0            ! Array(-128,  0,  0,  0) |
+        Int.MaxValue ! Array(  -1, -1, -1, -1) |
+        Int.MinValue ! Array(   0,  0,  0,  0) |
+        -3           ! Array( 127, -1, -1, -3) |
+        3            ! Array(-128,  0,  0,  3) | { (value, expectedBytes) =>
+        val bytes = IntConverter.toBytes(value)
+        val result = IntConverter.getValue(bytes)
+        bytes must beEqualTo(expectedBytes)
+        result must beEqualTo(value)
+      }
+    }
+
+    "have a lexicographic ordering matching the normal numeric ordering" in {
+      val numericOrdering = Seq(Int.MinValue, Int.MinValue / 2, -3, 0, 3, Int.MaxValue / 2, Int.MaxValue)
+      val bytes = numericOrdering.map(IntConverter.toBytes)
+      bytes must beSorted
+    }
+
+  }
+
   "LongConverter" should {
 
     "convert symmetrically" in {

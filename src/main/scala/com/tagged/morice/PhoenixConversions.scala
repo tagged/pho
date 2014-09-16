@@ -47,6 +47,19 @@ object PhoenixConversions {
 
   }
 
+  case object IntConverter extends MoConverter[Int] {
+
+    val sizeOf = 4
+
+    def toBytes(value: Int): Array[Byte] = Bytes.toBytes(value ^ Int.MinValue)
+
+    def getToken(bytes: Array[Byte]): ConverterToken[Int] = {
+      val token = bytes.slice(0, sizeOf)
+      ConverterToken(token, Bytes.toInt(token) ^ Int.MinValue)
+    }
+
+  }
+
   case object LongConverter extends MoConverter[Long] {
 
     val sizeOf = 8
