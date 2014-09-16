@@ -17,6 +17,6 @@ crossPaths := false
 
 publishMavenStyle := true
 
-publishTo := Some("artifactory01.tagged.com" at "http://artifactory.tagged.com:8081/artifactory/ext-release-local")
+publishTo := Some("artifactory.tagged.com" at "https://artifactory.tagged.com/artifactory/ext-release-local")
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
