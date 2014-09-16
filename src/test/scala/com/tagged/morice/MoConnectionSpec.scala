@@ -144,7 +144,6 @@ class MoConnectionSpec extends Specification {
       result must beEqualTo(docs.slice(0, 5))
     }
 
-
     "let us find elements using an equality filter" in {
       val searchCell = docs.slice(4,5).head.values.head
       val query = MoQuery(
@@ -156,6 +155,25 @@ class MoConnectionSpec extends Specification {
       val result = morice.read(tableName, query)
 
       result must beEqualTo(docs.slice(4, 5))
+    }
+
+    "let us find elements using an multiple equality filters ORed together" in {
+      val searchCell1 = docs.slice(1,2).head.values.head
+      val searchCell2 = docs.slice(4,5).head.values.head
+      val query = MoQuery(
+        MoRowKey("querySet." + now + ".", StringConverter),
+        MoRowKey("querySet." + now + "z", StringConverter),
+        Seq(column),
+        Seq(
+          MoFilter.OrFilter(
+            MoFilter.CellEqualsFilter(searchCell1),
+            MoFilter.CellEqualsFilter(searchCell2)
+          )
+        )
+      )
+      val result = morice.read(tableName, query)
+
+      result must beEqualTo(docs.slice(1,2) ++ docs.slice(4, 5))
     }
 
   }

@@ -36,4 +36,10 @@ object MoFilter {
 
   }
 
+  case class OrFilter(filters: MoFilter*) extends MoFilter {
+
+    lazy val getFilter: Filter = new FilterList(FilterList.Operator.MUST_PASS_ONE, filters.map(_.getFilter): _*)
+
+  }
+
 }
