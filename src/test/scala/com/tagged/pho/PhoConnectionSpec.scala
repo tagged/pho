@@ -1,6 +1,7 @@
 package com.tagged.pho
 
 import com.tagged.pho.PhoenixConversions.StringConverter
+import com.tagged.pho.filter._
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.{Scan, Get, Put, HConnectionManager}
 import org.apache.hadoop.hbase.util.Bytes
@@ -137,7 +138,7 @@ class PhoConnectionSpec extends Specification {
         MoRowKey("querySet." + now + ".", StringConverter),
         MoRowKey("querySet." + now + "z", StringConverter),
         Seq(column),
-        Seq(MoFilter.LimitFilter(5))
+        Seq(LimitFilter(5))
       )
       val result = pho.read(tableName, query)
 
@@ -150,7 +151,10 @@ class PhoConnectionSpec extends Specification {
         MoRowKey("querySet." + now + ".", StringConverter),
         MoRowKey("querySet." + now + "z", StringConverter),
         Seq(column),
-        Seq(MoFilter.CellEqualsFilter(searchCell), MoFilter.LimitFilter(3))
+        Seq(
+          EqualsFilter(searchCell),
+          LimitFilter(3)
+        )
       )
       val result = pho.read(tableName, query)
 
@@ -165,9 +169,9 @@ class PhoConnectionSpec extends Specification {
         MoRowKey("querySet." + now + "z", StringConverter),
         Seq(column),
         Seq(
-          MoFilter.OrFilter(
-            MoFilter.CellEqualsFilter(searchCell1),
-            MoFilter.CellEqualsFilter(searchCell2)
+          OrFilter(
+            EqualsFilter(searchCell1),
+            EqualsFilter(searchCell2)
           )
         )
       )
