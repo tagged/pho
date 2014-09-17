@@ -14,11 +14,11 @@ class PhoConnection(connection: HConnection) {
     }
   }
 
-  def withScanner[A](name: String, scan: Scan)(block: Iterable[Result] => A) = {
+  def withScanner[A](name: String, scan: Scan)(block: Seq[Result] => A) = {
     withTable(name) { table =>
       val scanner = table.getScanner(scan)
       try {
-        block(scanner.asScala)
+        block(scanner.asScala.toSeq)
       } finally {
         scanner.close()
       }
@@ -31,7 +31,7 @@ class PhoConnection(connection: HConnection) {
     }
   }
 
-  def read(tableName: String, rowKey: RowKey[_], columns: Iterable[Column[_]]): Iterable[Cell[_]] = {
+  def read(tableName: String, rowKey: RowKey[_], columns: Seq[Column[_]]): Seq[Cell[_]] = {
     withTable(tableName) { table =>
       val get = new Get(rowKey.toBytes)
       for (column <- columns) {
@@ -42,7 +42,7 @@ class PhoConnection(connection: HConnection) {
     }
   }
 
-  def read[A](tableName: String, query: Query[A]): Iterable[Document[A]] = {
+  def read[A](tableName: String, query: Query[A]): Seq[Document[A]] = {
     withScanner(tableName, query.getScan) { scanner =>
       scanner.map({ result =>
         val key = query.startRow.getRowKey(result)

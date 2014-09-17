@@ -11,9 +11,9 @@ import org.apache.hadoop.hbase.client.Put
  * @param version
  * @tparam A
  */
-case class Document[A](key: RowKey[A], cells: Iterable[Cell[_]], version: Option[Version] = None) {
+case class Document[A](key: RowKey[A], cells: Seq[Cell[_]], version: Option[Version] = None) {
 
-  def this(key: RowKey[A], cells: Iterable[Cell[_]], version: Version) = this(key, cells, Option(version))
+  def this(key: RowKey[A], cells: Seq[Cell[_]], version: Version) = this(key, cells, Option(version))
 
   /**
    * Retrieve a specific column value from this document.
