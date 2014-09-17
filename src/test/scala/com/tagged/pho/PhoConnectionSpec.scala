@@ -1,6 +1,7 @@
 package com.tagged.pho
 
-import com.tagged.pho.PhoenixConversions.StringConverter
+import com.tagged.pho.converter.PhoenixConverters
+import PhoenixConverters.StringConverter
 import com.tagged.pho.filter._
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.{Scan, Get, Put, HConnectionManager}

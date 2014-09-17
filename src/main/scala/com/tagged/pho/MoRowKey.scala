@@ -1,8 +1,9 @@
 package com.tagged.pho
 
+import com.tagged.pho.converter.PhoConverter
 import org.apache.hadoop.hbase.client.Result
 
-case class MoRowKey[T](value: T, converter: MoConverter[T]) {
+case class MoRowKey[T](value: T, converter: PhoConverter[T]) {
 
   def toBytes: Array[Byte] = converter.toBytes(value)
 

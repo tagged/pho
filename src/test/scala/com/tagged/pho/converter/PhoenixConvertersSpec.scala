@@ -1,11 +1,11 @@
-package com.tagged.pho
+package com.tagged.pho.converter
 
+import com.tagged.pho.converter.PhoenixConverters._
 import org.apache.hadoop.hbase.util.Bytes
 import org.specs2.matcher.DataTables
 import org.specs2.mutable.Specification
-import PhoenixConversions._
 
-class PhoenixConversionsSpec extends Specification with DataTables {
+class PhoenixConvertersSpec extends Specification with DataTables {
 
   implicit object LexicographicOrdering extends Ordering[Array[Byte]] {
     def compare(a:Array[Byte], b:Array[Byte]) = Bytes.compareTo(a, b)

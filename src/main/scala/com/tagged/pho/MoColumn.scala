@@ -1,9 +1,10 @@
 package com.tagged.pho
 
+import com.tagged.pho.converter.PhoConverter
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.util.Bytes
 
-case class MoColumn[T](family: MoColumnFamily, name: String, converter: MoConverter[T]) {
+case class MoColumn[T](family: MoColumnFamily, name: String, converter: PhoConverter[T]) {
 
   lazy val toBytes: Array[Byte] = Bytes.toBytes(name)
 

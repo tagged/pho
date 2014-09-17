@@ -1,11 +1,10 @@
-package com.tagged.pho
+package com.tagged.pho.converter
 
-import com.tagged.pho.MoConverter.ConverterToken
 import org.apache.hadoop.hbase.util.Bytes
 
-object PhoenixConversions {
+object PhoenixConverters {
 
-  case object BooleanConverter extends MoConverter[Boolean] {
+  case object BooleanConverter extends PhoConverter[Boolean] {
 
     val sizeOf = 1
 
@@ -21,7 +20,7 @@ object PhoenixConversions {
 
   }
 
-  case object ByteConverter extends MoConverter[Byte] {
+  case object ByteConverter extends PhoConverter[Byte] {
 
     val sizeOf = 1
 
@@ -34,7 +33,7 @@ object PhoenixConversions {
 
   }
 
-  case object ShortConverter extends MoConverter[Short] {
+  case object ShortConverter extends PhoConverter[Short] {
 
     val sizeOf = 2
 
@@ -47,7 +46,7 @@ object PhoenixConversions {
 
   }
 
-  case object IntConverter extends MoConverter[Int] {
+  case object IntConverter extends PhoConverter[Int] {
 
     val sizeOf = 4
 
@@ -60,7 +59,7 @@ object PhoenixConversions {
 
   }
 
-  case object LongConverter extends MoConverter[Long] {
+  case object LongConverter extends PhoConverter[Long] {
 
     val sizeOf = 8
 
@@ -73,7 +72,7 @@ object PhoenixConversions {
 
   }
 
-  case object StringConverter extends MoConverter[String] {
+  case object StringConverter extends PhoConverter[String] {
 
     def toBytes(value: String): Array[Byte] = Bytes.toBytes(value)
 

@@ -1,11 +1,10 @@
-package com.tagged.pho
+package com.tagged.pho.converter
 
-import com.tagged.pho.MoConverter._
-import com.tagged.pho.PhoenixConversions.LongConverter
+import com.tagged.pho.converter.PhoenixConverters.LongConverter
 import org.specs2.matcher.DataTables
 import org.specs2.mutable.Specification
 
-class MoConverterSpec extends Specification with DataTables {
+class PhoConverterSpec extends Specification with DataTables {
 
   "IdentityConverter" should {
 
@@ -28,7 +27,7 @@ class MoConverterSpec extends Specification with DataTables {
       "bytes"               | "expectedInversion"  |>
       Array[Byte](23)       ! Array(~23)           |
       Array[Byte](-3, 4, 3) ! Array(~(-3), ~4, ~3) | { (bytes, expectedInversion) =>
-        val converter = InvertConverter(IdentityConverter)
+        val converter = InverseConverter(IdentityConverter)
         val toBytesResult = converter.toBytes(bytes)
         val getValueResult = converter.getValue(toBytesResult)
         toBytesResult must beEqualTo(expectedInversion)
