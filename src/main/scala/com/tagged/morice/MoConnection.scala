@@ -27,12 +27,7 @@ class MoConnection(connection: HConnection) {
 
   def write(tableName: String, doc: MoDocument[_]) = {
     withTable(tableName) { table =>
-      val put = new Put(doc.key.toBytes)
-      for (value <- doc.values) {
-        put.add(value.column.family.toBytes, value.column.toBytes, value.toBytes)
-      }
-      table.put(put)
-      table.flushCommits()
+      table.put(doc.getPut)
     }
   }
 
