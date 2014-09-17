@@ -1,7 +1,6 @@
 package com.tagged.pho
 
 import org.apache.hadoop.hbase.client.Put
-import org.apache.hadoop.hbase.filter.{CompareFilter, SingleColumnValueFilter, Filter}
 
 /**
  * Identified by column location, value and version timestamp,
@@ -21,12 +20,5 @@ case class Cell[A](column: Column[A], value: A, version: Option[Version] = None)
     case Some(v) => put.add(column.family.bytes, column.qualifierBytes, v.timestamp, valueBytes)
     case None    => put.add(column.family.bytes, column.qualifierBytes, valueBytes)
   }
-
-  def equalsFilter: Filter = new SingleColumnValueFilter(
-    column.family.bytes,
-    column.qualifierBytes,
-    CompareFilter.CompareOp.EQUAL,
-    valueBytes
-  )
 
 }
