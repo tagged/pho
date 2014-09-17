@@ -4,13 +4,13 @@ import com.tagged.pho.filter.PhoFilter
 import org.apache.hadoop.hbase.client.Scan
 
 case class Query[A](
-                         startRow: RowKey[A],
-                         endRow: RowKey[_],
-                         columns: Iterable[Column[_]],
-                         filters: Iterable[PhoFilter] = Seq()
-                         ) {
+                     startRow: RowKey[A],
+                     endRow: RowKey[_],
+                     columns: Seq[Column[_]],
+                     filters: Seq[PhoFilter] = Seq()
+                     ) {
 
-  lazy val getScan = {
+  def getScan = {
     val scan = new Scan(startRow.toBytes, endRow.toBytes)
     for (column <- columns) {
       scan.addColumn(column.family.bytes, column.qualifierBytes)
