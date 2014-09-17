@@ -1,6 +1,6 @@
-package com.tagged.morice
+package com.tagged.pho
 
-import com.tagged.morice.MoConverter.ConverterToken
+import com.tagged.pho.MoConverter.ConverterToken
 import org.apache.hadoop.hbase.util.Bytes
 
 object PhoenixConversions {

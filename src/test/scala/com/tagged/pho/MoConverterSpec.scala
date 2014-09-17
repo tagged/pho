@@ -1,7 +1,7 @@
-package com.tagged.morice
+package com.tagged.pho
 
-import com.tagged.morice.MoConverter._
-import com.tagged.morice.PhoenixConversions.LongConverter
+import com.tagged.pho.MoConverter._
+import com.tagged.pho.PhoenixConversions.LongConverter
 import org.specs2.matcher.DataTables
 import org.specs2.mutable.Specification
 

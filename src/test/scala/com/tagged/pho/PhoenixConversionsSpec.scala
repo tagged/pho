@@ -1,4 +1,4 @@
-package com.tagged.morice
+package com.tagged.pho
 
 import org.apache.hadoop.hbase.util.Bytes
 import org.specs2.matcher.DataTables

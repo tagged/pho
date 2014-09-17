@@ -1,4 +1,4 @@
-package com.tagged.morice
+package com.tagged.pho
 
 import org.apache.hadoop.hbase.client._
 import scala.collection.JavaConverters._

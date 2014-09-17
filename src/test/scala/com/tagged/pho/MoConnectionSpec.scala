@@ -1,6 +1,6 @@
-package com.tagged.morice
+package com.tagged.pho
 
-import com.tagged.morice.PhoenixConversions.StringConverter
+import com.tagged.pho.PhoenixConversions.StringConverter
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.{Scan, Get, Put, HConnectionManager}
 import org.apache.hadoop.hbase.util.Bytes

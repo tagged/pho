@@ -1,8 +1,8 @@
-name := "morice"
+name := "pho"
 
 organization := "com.tagged"
 
-version := "0.1.3"
+version := "0.2.0"
 
 libraryDependencies ++= {
   val hadoopV = "2.4.1"

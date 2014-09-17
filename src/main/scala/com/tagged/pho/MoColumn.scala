@@ -1,4 +1,4 @@
-package com.tagged.morice
+package com.tagged.pho
 
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.util.Bytes

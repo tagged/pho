@@ -1,4 +1,4 @@
-package com.tagged.morice
+package com.tagged.pho
 
 import org.specs2.mutable.Specification
 
