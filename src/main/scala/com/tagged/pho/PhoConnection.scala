@@ -25,13 +25,13 @@ class PhoConnection(connection: HConnection) {
     }
   }
 
-  def write(tableName: String, doc: MoDocument[_]) = {
+  def write(tableName: String, doc: Document[_]) = {
     withTable(tableName) { table =>
       table.put(doc.getPut)
     }
   }
 
-  def read(tableName: String, rowKey: MoRowKey[_], columns: Iterable[MoColumn[_]]): Iterable[MoCell[_]] = {
+  def read(tableName: String, rowKey: RowKey[_], columns: Iterable[Column[_]]): Iterable[Cell[_]] = {
     withTable(tableName) { table =>
       val get = new Get(rowKey.toBytes)
       for (column <- columns) {
@@ -42,12 +42,12 @@ class PhoConnection(connection: HConnection) {
     }
   }
 
-  def read[A](tableName: String, query: MoQuery[A]): Iterable[MoDocument[A]] = {
+  def read[A](tableName: String, query: Query[A]): Iterable[Document[A]] = {
     withScanner(tableName, query.getScan) { scanner =>
       scanner.map({ result =>
         val key = query.startRow.getRowKey(result)
         val cells = query.columns.map(_.getCell(result).getOrElse(null)).filter(_ != null)
-        MoDocument(key, cells)
+        Document(key, cells)
       })
     }
   }

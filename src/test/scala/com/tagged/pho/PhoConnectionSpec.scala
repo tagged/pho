@@ -16,8 +16,8 @@ import org.specs2.mutable.Specification
 class PhoConnectionSpec extends Specification {
 
   val tableName = "PhoIntegrationTests"
-  val family1 = MoColumnFamily("family1")
-  val family2 = MoColumnFamily("family2")
+  val family1 = ColumnFamily("family1")
+  val family2 = ColumnFamily("family2")
 
   val configuration = HBaseConfiguration.create()
   scala.util.Properties.propOrNone("hbase.zookeeper.quorum") match {
@@ -56,13 +56,13 @@ class PhoConnectionSpec extends Specification {
 
     "let us scan using primitives" in {
       val now = System.nanoTime()
-      val column = MoColumn(family1, "resultSetTest", StringConverter)
+      val column = Column(family1, "resultSetTest", StringConverter)
 
       // write some rows
       for ((i, word) <- Map(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) {
-        val doc = new MoDocument(
-          MoRowKey("readSet." + now + "." + i, StringConverter),
-          Seq(MoCell(column, word))
+        val doc = new Document(
+          RowKey("readSet." + now + "." + i, StringConverter),
+          Seq(Cell(column, word))
         )
         pho.write(tableName, doc)
       }
@@ -81,14 +81,14 @@ class PhoConnectionSpec extends Specification {
   "write/read single row key" should {
 
     "let us write and read specific column values" in {
-      val column1 = MoColumn(family1, "columnReadWriteTest1", StringConverter)
-      val column2 = MoColumn(family2, "columnReadWriteTest2", StringConverter)
+      val column1 = Column(family1, "columnReadWriteTest1", StringConverter)
+      val column2 = Column(family2, "columnReadWriteTest2", StringConverter)
 
-      val doc = MoDocument(
-        MoRowKey(System.nanoTime().toString, StringConverter),
+      val doc = Document(
+        RowKey(System.nanoTime().toString, StringConverter),
         Seq(
-          MoCell(column1, System.nanoTime().toString),
-          MoCell(column2, System.nanoTime().toString)
+          Cell(column1, System.nanoTime().toString),
+          Cell(column2, System.nanoTime().toString)
         )
       )
 
@@ -99,8 +99,8 @@ class PhoConnectionSpec extends Specification {
     }
 
     "read empty column values as None" in {
-      val rowKey = MoRowKey("emptyReadTest" + System.nanoTime(), StringConverter)
-      val column = MoColumn(family1, "emptyReadTest", StringConverter)
+      val rowKey = RowKey("emptyReadTest" + System.nanoTime(), StringConverter)
+      val column = Column(family1, "emptyReadTest", StringConverter)
 
       val readResult = pho.read(tableName, rowKey, Seq(column))
 
@@ -111,22 +111,22 @@ class PhoConnectionSpec extends Specification {
 
   "queries" should {
     val now = System.nanoTime()
-    val column = MoColumn(family1, "queryResultSetTest", StringConverter)
+    val column = Column(family1, "queryResultSetTest", StringConverter)
 
     // write some rows
     val docs = for ((i, word) <- List(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) yield {
-      val doc = new MoDocument(
-        MoRowKey("querySet." + now + "." + i, StringConverter),
-        Seq(MoCell(column, word))
+      val doc = new Document(
+        RowKey("querySet." + now + "." + i, StringConverter),
+        Seq(Cell(column, word))
       )
       pho.write(tableName, doc)
       doc
     }
 
     "let us read multiple documents at once" in {
-      val query = MoQuery(
-        MoRowKey("querySet." + now + ".", StringConverter),
-        MoRowKey("querySet." + now + "z", StringConverter),
+      val query = Query(
+        RowKey("querySet." + now + ".", StringConverter),
+        RowKey("querySet." + now + "z", StringConverter),
         Seq(column)
       )
       val result = pho.read(tableName, query)
@@ -135,9 +135,9 @@ class PhoConnectionSpec extends Specification {
     }
 
     "let us limit the length of the result set read" in {
-      val query = MoQuery(
-        MoRowKey("querySet." + now + ".", StringConverter),
-        MoRowKey("querySet." + now + "z", StringConverter),
+      val query = Query(
+        RowKey("querySet." + now + ".", StringConverter),
+        RowKey("querySet." + now + "z", StringConverter),
         Seq(column),
         Seq(LimitFilter(5))
       )
@@ -148,9 +148,9 @@ class PhoConnectionSpec extends Specification {
 
     "let us find elements using an equality filter" in {
       val searchCell = docs.slice(4,5).head.values.head
-      val query = MoQuery(
-        MoRowKey("querySet." + now + ".", StringConverter),
-        MoRowKey("querySet." + now + "z", StringConverter),
+      val query = Query(
+        RowKey("querySet." + now + ".", StringConverter),
+        RowKey("querySet." + now + "z", StringConverter),
         Seq(column),
         Seq(
           EqualsFilter(searchCell),
@@ -165,9 +165,9 @@ class PhoConnectionSpec extends Specification {
     "let us find elements using an multiple equality filters ORed together" in {
       val searchCell1 = docs.slice(1,2).head.values.head
       val searchCell2 = docs.slice(4,5).head.values.head
-      val query = MoQuery(
-        MoRowKey("querySet." + now + ".", StringConverter),
-        MoRowKey("querySet." + now + "z", StringConverter),
+      val query = Query(
+        RowKey("querySet." + now + ".", StringConverter),
+        RowKey("querySet." + now + "z", StringConverter),
         Seq(column),
         Seq(
           OrFilter(
