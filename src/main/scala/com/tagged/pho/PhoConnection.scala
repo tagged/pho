@@ -38,7 +38,7 @@ class PhoConnection(connection: HConnection) {
         get.addColumn(column.family.bytes, column.qualifierBytes)
       }
       val result = table.get(get)
-      columns.map(_.getCell(result).getOrElse(null)).filter(_ != null)
+      columns.map(_.getCell(result).orNull).filter(_ != null)
     }
   }
 
@@ -46,7 +46,7 @@ class PhoConnection(connection: HConnection) {
     withScanner(tableName, query.getScan) { scanner =>
       scanner.map({ result =>
         val key = query.startRow.getRowKey(result)
-        val cells = query.columns.map(_.getCell(result).getOrElse(null)).filter(_ != null)
+        val cells = query.columns.map(_.getCell(result).orNull).filter(_ != null)
         Document(key, cells)
       })
     }
