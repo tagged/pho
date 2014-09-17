@@ -181,6 +181,21 @@ class PhoConnectionSpec extends Specification {
       result must beEqualTo(docs.slice(1,2) ++ docs.slice(4, 5))
     }
 
+    "let us find elements up until a particular result" in {
+      val searchCell = docs.slice(4,5).head.cells.head
+      val query = Query(
+        RowKey("querySet." + now + ".", StringConverter),
+        RowKey("querySet." + now + "z", StringConverter),
+        Seq(column),
+        Seq(
+          WhileFilter(NotEqualsFilter(searchCell))
+        )
+      )
+      val result = pho.read(tableName, query)
+
+      result must beEqualTo(docs.slice(0, 4))
+    }
+
   }
 
 }
