@@ -93,9 +93,9 @@ class PhoConnectionSpec extends Specification {
       )
 
       pho.write(tableName, doc)
-      val readResult = pho.read(tableName, doc.key, doc.values.map(_.column))
+      val readResult = pho.read(tableName, doc.key, doc.cells.map(_.column))
 
-      readResult must beEqualTo(doc.values)
+      readResult must beEqualTo(doc.cells)
     }
 
     "read empty column values as None" in {
@@ -147,7 +147,7 @@ class PhoConnectionSpec extends Specification {
     }
 
     "let us find elements using an equality filter" in {
-      val searchCell = docs.slice(4,5).head.values.head
+      val searchCell = docs.slice(4,5).head.cells.head
       val query = Query(
         RowKey("querySet." + now + ".", StringConverter),
         RowKey("querySet." + now + "z", StringConverter),
@@ -163,8 +163,8 @@ class PhoConnectionSpec extends Specification {
     }
 
     "let us find elements using an multiple equality filters ORed together" in {
-      val searchCell1 = docs.slice(1,2).head.values.head
-      val searchCell2 = docs.slice(4,5).head.values.head
+      val searchCell1 = docs.slice(1,2).head.cells.head
+      val searchCell2 = docs.slice(4,5).head.cells.head
       val query = Query(
         RowKey("querySet." + now + ".", StringConverter),
         RowKey("querySet." + now + "z", StringConverter),
