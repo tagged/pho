@@ -17,7 +17,7 @@ case class Document[A](key: RowKey[A], values: Iterable[Cell[_]], version: Optio
       case None    => new Put(key.toBytes)
     }
     for (value <- values) {
-      put.add(value.column.family.toBytes, value.column.qualifierBytes, value.toBytes)
+      put.add(value.column.family.bytes, value.column.qualifierBytes, value.toBytes)
     }
     put
   }

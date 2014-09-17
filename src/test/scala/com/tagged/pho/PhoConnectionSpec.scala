@@ -37,14 +37,14 @@ class PhoConnectionSpec extends Specification {
 
       val readResult = pho.withTable(tableName) { table =>
         val put = new Put(rowKey)
-        put.add(family1.toBytes, qualifier, writeValue)
+        put.add(family1.bytes, qualifier, writeValue)
         table.put(put)
         table.flushCommits()
 
         val get = new Get(rowKey)
-        get.addColumn(family1.toBytes, qualifier)
+        get.addColumn(family1.bytes, qualifier)
         val result = table.get(get)
-        result.getValue(family1.toBytes, qualifier)
+        result.getValue(family1.bytes, qualifier)
       }
 
       readResult must beEqualTo(writeValue)

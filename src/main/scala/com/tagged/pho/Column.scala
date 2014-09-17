@@ -18,7 +18,7 @@ case class Column[A](family: ColumnFamily, qualifier: String, converter: PhoConv
   lazy val qualifierBytes: Array[Byte] = Bytes.toBytes(qualifier)
 
   def getCell(result: Result): Option[Cell[A]] = {
-    result.getValue(family.toBytes, qualifierBytes) match {
+    result.getValue(family.bytes, qualifierBytes) match {
       case null => None
       case bytes =>
         converter.getValue(bytes) match {

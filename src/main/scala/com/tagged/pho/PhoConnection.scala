@@ -35,7 +35,7 @@ class PhoConnection(connection: HConnection) {
     withTable(tableName) { table =>
       val get = new Get(rowKey.toBytes)
       for (column <- columns) {
-        get.addColumn(column.family.toBytes, column.qualifierBytes)
+        get.addColumn(column.family.bytes, column.qualifierBytes)
       }
       val result = table.get(get)
       columns.map(_.getCell(result).getOrElse(null)).filter(_ != null)

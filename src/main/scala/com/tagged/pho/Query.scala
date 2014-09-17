@@ -13,7 +13,7 @@ case class Query[A](
   lazy val getScan = {
     val scan = new Scan(startRow.toBytes, endRow.toBytes)
     for (column <- columns) {
-      scan.addColumn(column.family.toBytes, column.qualifierBytes)
+      scan.addColumn(column.family.bytes, column.qualifierBytes)
     }
     for (filter <- filters) {
       filter.addFilterTo(scan)
