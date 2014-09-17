@@ -3,7 +3,7 @@ package com.tagged.pho
 import org.apache.hadoop.hbase.client._
 import scala.collection.JavaConverters._
 
-class MoConnection(connection: HConnection) {
+class PhoConnection(connection: HConnection) {
 
   def withTable[A](name: String)(block: HTableInterface => A) = {
     val table = connection.getTable(name)

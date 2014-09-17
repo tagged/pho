@@ -9,11 +9,11 @@ import org.specs2.mutable.Specification
 /**
  * This test requires that a test table be pre-created on the HBase cluster:
  *
- *     create 'MoriceConnectionSpec', 'family1', 'family2'
+ *     create 'PhoIntegrationTests', 'family1', 'family2'
  */
-class MoConnectionSpec extends Specification {
+class PhoConnectionSpec extends Specification {
 
-  val tableName = "MoriceConnectionSpec"
+  val tableName = "PhoIntegrationTests"
   val family1 = MoColumnFamily("family1")
   val family2 = MoColumnFamily("family2")
 
@@ -24,7 +24,7 @@ class MoConnectionSpec extends Specification {
   }
 
   val connection = HConnectionManager.createConnection(configuration)
-  val morice = new MoConnection(connection)
+  val pho = new PhoConnection(connection)
 
   "withTable" should {
 
@@ -33,7 +33,7 @@ class MoConnectionSpec extends Specification {
       val qualifier = Bytes.toBytes("primitiveReadWriteTest")
       val writeValue = Bytes.toBytes(System.nanoTime().toString)
 
-      val readResult = morice.withTable(tableName) { table =>
+      val readResult = pho.withTable(tableName) { table =>
         val put = new Put(rowKey)
         put.add(family1.toBytes, qualifier, writeValue)
         table.put(put)
@@ -62,13 +62,13 @@ class MoConnectionSpec extends Specification {
           MoRowKey("readSet." + now + "." + i, StringConverter),
           Seq(MoCell(column, word))
         )
-        morice.write(tableName, doc)
+        pho.write(tableName, doc)
       }
 
       val startRow = Bytes.toBytes("readSet." + now)
       val endRow = Bytes.toBytes("readSet." + (now + 1))
       val scan = new Scan(startRow, endRow)
-      val readResult = morice.withScanner(tableName, scan) { results =>
+      val readResult = pho.withScanner(tableName, scan) { results =>
         results.map(column.getCell).flatten.map(_.value)
       }
 
@@ -90,8 +90,8 @@ class MoConnectionSpec extends Specification {
         )
       )
 
-      morice.write(tableName, doc)
-      val readResult = morice.read(tableName, doc.key, doc.values.map(_.column))
+      pho.write(tableName, doc)
+      val readResult = pho.read(tableName, doc.key, doc.values.map(_.column))
 
       readResult must beEqualTo(doc.values)
     }
@@ -100,7 +100,7 @@ class MoConnectionSpec extends Specification {
       val rowKey = MoRowKey("emptyReadTest" + System.nanoTime(), StringConverter)
       val column = MoColumn(family1, "emptyReadTest", StringConverter)
 
-      val readResult = morice.read(tableName, rowKey, Seq(column))
+      val readResult = pho.read(tableName, rowKey, Seq(column))
 
       readResult must beEmpty
     }
@@ -117,7 +117,7 @@ class MoConnectionSpec extends Specification {
         MoRowKey("querySet." + now + "." + i, StringConverter),
         Seq(MoCell(column, word))
       )
-      morice.write(tableName, doc)
+      pho.write(tableName, doc)
       doc
     }
 
@@ -127,7 +127,7 @@ class MoConnectionSpec extends Specification {
         MoRowKey("querySet." + now + "z", StringConverter),
         Seq(column)
       )
-      val result = morice.read(tableName, query)
+      val result = pho.read(tableName, query)
 
       result must beEqualTo(docs)
     }
@@ -139,7 +139,7 @@ class MoConnectionSpec extends Specification {
         Seq(column),
         Seq(MoFilter.LimitFilter(5))
       )
-      val result = morice.read(tableName, query)
+      val result = pho.read(tableName, query)
 
       result must beEqualTo(docs.slice(0, 5))
     }
@@ -152,7 +152,7 @@ class MoConnectionSpec extends Specification {
         Seq(column),
         Seq(MoFilter.CellEqualsFilter(searchCell), MoFilter.LimitFilter(3))
       )
-      val result = morice.read(tableName, query)
+      val result = pho.read(tableName, query)
 
       result must beEqualTo(docs.slice(4, 5))
     }
@@ -171,7 +171,7 @@ class MoConnectionSpec extends Specification {
           )
         )
       )
-      val result = morice.read(tableName, query)
+      val result = pho.read(tableName, query)
 
       result must beEqualTo(docs.slice(1,2) ++ docs.slice(4, 5))
     }
