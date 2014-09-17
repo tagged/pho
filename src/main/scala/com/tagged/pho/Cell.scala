@@ -8,7 +8,7 @@ case class Cell[T](column: Column[T], value: T) {
 
   def equalsFilter: Filter = new SingleColumnValueFilter(
     column.family.toBytes,
-    column.toBytes,
+    column.qualifierBytes,
     CompareFilter.CompareOp.EQUAL,
     toBytes
   )

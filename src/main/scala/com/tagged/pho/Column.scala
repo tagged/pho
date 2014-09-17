@@ -4,12 +4,21 @@ import com.tagged.pho.converter.PhoConverter
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.util.Bytes
 
-case class Column[T](family: ColumnFamily, name: String, converter: PhoConverter[T]) {
+/**
+ * A column defines its identifier (family, qualifier)
+ * and its conversion between high-level value and storage-level byte array.
+ *
+ * @param family    column group
+ * @param qualifier column name
+ * @param converter for translating from bytes to values and vice-versa
+ * @tparam A        the high-level type stored in this column
+ */
+case class Column[A](family: ColumnFamily, qualifier: String, converter: PhoConverter[A]) {
 
-  lazy val toBytes: Array[Byte] = Bytes.toBytes(name)
+  lazy val qualifierBytes: Array[Byte] = Bytes.toBytes(qualifier)
 
-  def getCell(result: Result): Option[Cell[T]] = {
-    result.getValue(family.toBytes, toBytes) match {
+  def getCell(result: Result): Option[Cell[A]] = {
+    result.getValue(family.toBytes, qualifierBytes) match {
       case null => None
       case bytes =>
         converter.getValue(bytes) match {
