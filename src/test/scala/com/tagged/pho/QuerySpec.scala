@@ -1,5 +1,6 @@
 package com.tagged.pho
 
+import com.tagged.pho.converter.IdentityConverter
 import com.tagged.pho.phoenix.PhoenixConverters
 import PhoenixConverters._
 import com.tagged.pho.filter._
@@ -12,7 +13,7 @@ class QuerySpec extends Specification {
   val TestPrefix = "QuerySpec"
   val Number = Column(family1, s"$TestPrefix.Number", IntConverter)
   val Text   = Column(family1, s"$TestPrefix.Text", StringConverter)
-  val Even   = Column(family1, s"$TestPrefix.Even",   BooleanConverter)
+  val Even   = Column(family1, s"$TestPrefix.Even", BooleanConverter)
 
   val testData = Seq(
     Seq(
@@ -26,8 +27,7 @@ class QuerySpec extends Specification {
     ),
     Seq(
       Cell(Number, 3),
-      Cell(Text, "three"),
-      Cell(Even, false)
+      Cell(Text, "three")
     ),
     Seq(
       Cell(Number, 4),
@@ -163,6 +163,22 @@ class QuerySpec extends Specification {
       val result = pho.read(testTableName, query)
 
       result must beEqualTo(docs.slice(0, 4))
+    }
+
+  }
+
+  "EmptyFilter" should {
+
+    "Not include any columns that have non-existant or empty byte arrays" in {
+      val query = Query(
+        docs.head.key,
+        docs.last.key,
+        Seq(Number, Text, Even),
+        EmptyFilter(Even)
+      )
+      val result = pho.read(testTableName, query)
+
+      result must beEqualTo(docs.filter(_.getValue(Number).get % 2 == 0))
     }
 
   }
