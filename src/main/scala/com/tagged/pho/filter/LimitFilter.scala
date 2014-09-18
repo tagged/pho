@@ -1,6 +1,6 @@
 package com.tagged.pho.filter
 
-import org.apache.hadoop.hbase.filter.PageFilter
+import org.apache.hadoop.hbase.filter.{Filter, PageFilter}
 
 case class LimitFilter(limit: Int) extends PhoFilter {
 
@@ -8,6 +8,6 @@ case class LimitFilter(limit: Int) extends PhoFilter {
   //       This is because the filter is applied separately on different region servers.
   //       It does however optimize the scan of individual HRegions by making sure that the page size is never exceeded locally.
   //       https://hbase.apache.org/apidocs/org/apache/hadoop/hbase/filter/PageFilter.html
-  lazy val getFilter = new PageFilter(limit)
+  def getFilter: Filter = new PageFilter(limit)
 
 }
