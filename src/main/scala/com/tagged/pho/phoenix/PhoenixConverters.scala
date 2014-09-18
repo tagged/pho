@@ -16,7 +16,11 @@ object PhoenixConverters {
 
     def getToken(bytes: Array[Byte]): ConverterToken[Boolean] = {
       val token = bytes.slice(0, sizeOf)
-      ConverterToken(token, token(0) != 0.toByte)
+      val value = token.length match {
+        case 0 => false
+        case _ => token(0) != 0
+      }
+      ConverterToken(token, value)
     }
 
   }

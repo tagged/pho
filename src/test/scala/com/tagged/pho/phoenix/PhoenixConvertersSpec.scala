@@ -24,6 +24,11 @@ class PhoenixConvertersSpec extends Specification with DataTables {
       }
     }
 
+    "convert empty array to false" in {
+      val bytes = Array[Byte]()
+      BooleanConverter.getValue(bytes) must beFalse
+    }
+
   }
 
   "ByteConverter" should {
