@@ -71,12 +71,14 @@ class QuerySpec extends Specification {
     doc
   }
 
+  val endKey = RowKey(s"$TestPrefix.$now.Z", StringConverter)
+
   "Query" should {
 
     "retreive all documents in the original set" in {
       val query = Query(
         docs.head.key,
-        RowKey(s"$TestPrefix.$now.Z", StringConverter),
+        endKey,
         Seq(Number, Text, Even)
       )
       val result = pho.read(testTableName, query)
@@ -102,7 +104,7 @@ class QuerySpec extends Specification {
     "let us limit the length of the result set read" in {
       val query = Query(
         docs.head.key,
-        docs.last.key,
+        endKey,
         Seq(Number, Text, Even),
         LimitFilter(5)
       )
@@ -119,7 +121,7 @@ class QuerySpec extends Specification {
       val searchCell = docs.slice(4, 5).head.cells.head
       val query = Query(
         docs.head.key,
-        docs.last.key,
+        endKey,
         Seq(Number, Text, Even),
         EqualsFilter(searchCell)
         and LimitFilter(3)
@@ -138,7 +140,7 @@ class QuerySpec extends Specification {
       val searchCell2 = docs.slice(4, 5).head.cells.head
       val query = Query(
         docs.head.key,
-        docs.last.key,
+        endKey,
         Seq(Number, Text, Even),
         EqualsFilter(searchCell1)
         or EqualsFilter(searchCell2)
@@ -156,7 +158,7 @@ class QuerySpec extends Specification {
       val searchCell = docs.slice(4,5).head.cells.head
       val query = Query(
         docs.head.key,
-        docs.last.key,
+        endKey,
         Seq(Number, Text, Even),
         WhileFilter(NotEqualsFilter(searchCell))
       )
@@ -169,12 +171,28 @@ class QuerySpec extends Specification {
 
   "EmptyFilter" should {
 
-    "Not include any columns that have non-existant or empty byte arrays" in {
+    "only include any columns that have no value" in {
       val query = Query(
         docs.head.key,
-        docs.last.key,
+        endKey,
         Seq(Number, Text, Even),
         EmptyFilter(Even)
+      )
+      val result = pho.read(testTableName, query)
+
+      result must beEqualTo(docs.filter(_.getValue(Number).get % 2 == 1))
+    }
+
+  }
+
+  "NotEmptyFilter" should {
+
+    "only include columns that have a value" in {
+      val query = Query(
+        docs.head.key,
+        endKey,
+        Seq(Number, Text, Even),
+        NotEmptyFilter(Even)
       )
       val result = pho.read(testTableName, query)
 
