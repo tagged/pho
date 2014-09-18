@@ -1,5 +1,6 @@
-package com.tagged.pho.converter
+package com.tagged.pho.phoenix
 
+import com.tagged.pho.converter.{ConverterToken, PhoConverter}
 import org.apache.hadoop.hbase.util.Bytes
 
 object PhoenixConverters {

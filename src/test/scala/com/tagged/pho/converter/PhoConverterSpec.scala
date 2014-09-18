@@ -1,6 +1,7 @@
 package com.tagged.pho.converter
 
-import com.tagged.pho.converter.PhoenixConverters.LongConverter
+import com.tagged.pho.phoenix.PhoenixConverters
+import PhoenixConverters.LongConverter
 import org.specs2.matcher.DataTables
 import org.specs2.mutable.Specification
 

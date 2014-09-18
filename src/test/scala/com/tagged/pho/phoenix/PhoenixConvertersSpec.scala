@@ -1,6 +1,6 @@
-package com.tagged.pho.converter
+package com.tagged.pho.phoenix
 
-import com.tagged.pho.converter.PhoenixConverters._
+import com.tagged.pho.phoenix.PhoenixConverters._
 import org.apache.hadoop.hbase.util.Bytes
 import org.specs2.matcher.DataTables
 import org.specs2.mutable.Specification

@@ -1,6 +1,7 @@
 package com.tagged.pho
 
-import com.tagged.pho.converter.PhoenixConverters.StringConverter
+import com.tagged.pho.phoenix.PhoenixConverters
+import PhoenixConverters.StringConverter
 import com.tagged.pho.filter._
 import org.specs2.mutable.Specification
 

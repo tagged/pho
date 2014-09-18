@@ -1,6 +1,6 @@
 package com.tagged.pho
 
-import com.tagged.pho.converter.PhoenixConverters
+import com.tagged.pho.phoenix.PhoenixConverters
 import org.specs2.mutable.Specification
 
 class DocumentSpec extends Specification {

@@ -1,8 +1,9 @@
 package com.tagged.pho
 
-import com.tagged.pho.converter.PhoenixConverters
+import com.tagged.pho.phoenix.PhoenixConverters
 import PhoenixConverters.StringConverter
 import com.tagged.pho.filter._
+import com.tagged.pho.phoenix.PhoenixConverters
 import org.apache.hadoop.hbase.client.{Scan, Get, Put}
 import org.apache.hadoop.hbase.util.Bytes
 import org.specs2.mutable.Specification
