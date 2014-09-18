@@ -1,13 +1,13 @@
 package com.tagged.pho
 
-import com.tagged.pho.filter.PhoFilter
+import com.tagged.pho.filter.{NoOpFilter, PhoFilter}
 import org.apache.hadoop.hbase.client.Scan
 
 case class Query[A](
                      startRow: RowKey[A],
                      endRow: RowKey[_],
                      columns: Seq[Column[_]],
-                     filters: Seq[PhoFilter] = Seq()
+                     filter: PhoFilter = NoOpFilter
                      ) {
 
   def getScan = {
@@ -15,9 +15,7 @@ case class Query[A](
     for (column <- columns) {
       scan.addColumn(column.family.bytes, column.qualifierBytes)
     }
-    for (filter <- filters) {
-      filter.addFilterTo(scan)
-    }
+    filter.addFilterTo(scan)
     scan
   }
 

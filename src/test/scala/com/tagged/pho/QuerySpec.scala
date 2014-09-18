@@ -56,7 +56,7 @@ class QuerySpec extends Specification {
         docs.head.key,
         docs.last.key,
         Seq(Number),
-        Seq(LimitFilter(5))
+        LimitFilter(5)
       )
       val result = pho.read(testTableName, query)
 
@@ -73,7 +73,7 @@ class QuerySpec extends Specification {
         docs.head.key,
         docs.last.key,
         Seq(Number),
-        Seq(
+        AndFilter(
           EqualsFilter(searchCell),
           LimitFilter(3)
         )
@@ -94,11 +94,9 @@ class QuerySpec extends Specification {
         docs.head.key,
         docs.last.key,
         Seq(Number),
-        Seq(
-          OrFilter(
-            EqualsFilter(searchCell1),
-            EqualsFilter(searchCell2)
-          )
+        OrFilter(
+          EqualsFilter(searchCell1),
+          EqualsFilter(searchCell2)
         )
       )
       val result = pho.read(testTableName, query)
@@ -116,9 +114,7 @@ class QuerySpec extends Specification {
         docs.head.key,
         docs.last.key,
         Seq(Number),
-        Seq(
-          WhileFilter(NotEqualsFilter(searchCell))
-        )
+        WhileFilter(NotEqualsFilter(searchCell))
       )
       val result = pho.read(testTableName, query)
 

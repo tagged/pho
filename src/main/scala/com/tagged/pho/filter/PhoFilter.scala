@@ -7,7 +7,7 @@ trait PhoFilter {
 
   def getFilter: Filter
 
-  def addFilterTo(scan: Scan) = {
+  def addFilterTo(scan: Scan): Unit = {
     val addendum = getFilter
     scan.getFilter match {
       case current: Filter => scan.setFilter(new FilterList(current, addendum))
