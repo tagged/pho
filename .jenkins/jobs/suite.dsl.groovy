@@ -6,7 +6,7 @@ import com.tagged.build.common.*
 def project = new Project(jobFactory,
     [
         githubOwner: 'chat',
-        githubProject: 'morice',
+        githubProject: 'pho',
         hipchatRoom: 'chatstore',
         email: 'web@tagged.com',
     ]
