@@ -15,4 +15,8 @@ trait PhoFilter {
     }
   }
 
+  def and(next: PhoFilter) = AndFilter(this, next)
+
+  def or(next: PhoFilter) = OrFilter(this, next)
+
 }
