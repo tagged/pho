@@ -1,7 +1,7 @@
 package com.tagged.pho
 
 import com.tagged.pho.phoenix.PhoenixConverters
-import PhoenixConverters.StringConverter
+import PhoenixConverters._
 import com.tagged.pho.filter._
 import org.specs2.mutable.Specification
 
@@ -10,14 +10,62 @@ class QuerySpec extends Specification {
   import TestFixtures._
 
   val TestPrefix = "QuerySpec"
-  val Number = Column(family1, s"$TestPrefix.Number", StringConverter)
+  val Number = Column(family1, s"$TestPrefix.Number", IntConverter)
+  val Text   = Column(family1, s"$TestPrefix.Text", StringConverter)
+  val Even   = Column(family1, s"$TestPrefix.Even",   BooleanConverter)
 
+  val testData = Seq(
+    Seq(
+      Cell(Number, 1),
+      Cell(Text, "one")
+    ),
+    Seq(
+      Cell(Number, 2),
+      Cell(Text, "two"),
+      Cell(Even, true)
+    ),
+    Seq(
+      Cell(Number, 3),
+      Cell(Text, "three"),
+      Cell(Even, false)
+    ),
+    Seq(
+      Cell(Number, 4),
+      Cell(Text, "four"),
+      Cell(Even, true)
+    ),
+    Seq(
+      Cell(Number, 5),
+      Cell(Text, "five")
+    ),
+    Seq(
+      Cell(Number, 6),
+      Cell(Text, "six"),
+      Cell(Even, true)
+    ),
+    Seq(
+      Cell(Number, 7),
+      Cell(Text, "seven")
+    ),
+    Seq(
+      Cell(Number, 8),
+      Cell(Text, "eight"),
+      Cell(Even, true)
+    ),
+    Seq(
+      Cell(Number, 9),
+      Cell(Text, "nine")
+    )
+  )
+  
   // write some rows
   val now = System.nanoTime()
-  val docs = for ((i, word) <- List(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) yield {
+  var i = 0
+  val docs = for (cells <- testData) yield {
+    i = i + 1
     val doc = new Document(
       RowKey(s"$TestPrefix.$now.$i", StringConverter),
-      Seq(Cell(Number, word))
+      cells
     )
     pho.write(testTableName, doc)
     doc
@@ -29,7 +77,7 @@ class QuerySpec extends Specification {
       val query = Query(
         docs.head.key,
         RowKey(s"$TestPrefix.$now.Z", StringConverter),
-        Seq(Number)
+        Seq(Number, Text, Even)
       )
       val result = pho.read(testTableName, query)
 
@@ -40,7 +88,7 @@ class QuerySpec extends Specification {
       val query = Query(
         docs.head.key,
         docs.last.key,
-        Seq(Number)
+        Seq(Number, Text, Even)
       )
       val result = pho.read(testTableName, query)
 
@@ -55,7 +103,7 @@ class QuerySpec extends Specification {
       val query = Query(
         docs.head.key,
         docs.last.key,
-        Seq(Number),
+        Seq(Number, Text, Even),
         LimitFilter(5)
       )
       val result = pho.read(testTableName, query)
@@ -72,7 +120,7 @@ class QuerySpec extends Specification {
       val query = Query(
         docs.head.key,
         docs.last.key,
-        Seq(Number),
+        Seq(Number, Text, Even),
         EqualsFilter(searchCell)
         and LimitFilter(3)
       )
@@ -91,7 +139,7 @@ class QuerySpec extends Specification {
       val query = Query(
         docs.head.key,
         docs.last.key,
-        Seq(Number),
+        Seq(Number, Text, Even),
         EqualsFilter(searchCell1)
         or EqualsFilter(searchCell2)
       )
@@ -109,7 +157,7 @@ class QuerySpec extends Specification {
       val query = Query(
         docs.head.key,
         docs.last.key,
-        Seq(Number),
+        Seq(Number, Text, Even),
         WhileFilter(NotEqualsFilter(searchCell))
       )
       val result = pho.read(testTableName, query)
