@@ -28,7 +28,7 @@ example usage
 
 ### write a document into the table
 
-    val rowKey = RowKey(42, rowKeyConverter)
+    val rowKey = RowKey(rowKeyConverter, 42)
     val doc = Document(rowKey, Seq(
       Cell(col1, "Arthur Dent")
     ))
@@ -41,8 +41,8 @@ example usage
 
 ### query rows from the table
 
-    val startKey = RowKey(42, rowKeyConverter)
-    val endKey = RowKey(100, rowKeyConverter)
+    val startKey = RowKey(rowKeyConverter, 42)
+    val endKey = RowKey(rowKeyConverter, 100)
     val query = Query(
         startKey,
         endKey,
