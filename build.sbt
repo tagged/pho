@@ -2,7 +2,7 @@ name := "pho"
 
 organization := "com.tagged"
 
-version := "0.2.4"
+version := "0.2.5"
 
 libraryDependencies ++= {
   val hadoopV = "2.4.1"
