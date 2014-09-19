@@ -201,4 +201,68 @@ class QuerySpec extends Specification {
 
   }
 
+  "LessThanFilter" should {
+
+    "include columns with a lexical value lower than the one compared" in {
+      val query = Query(
+        docs.head.key,
+        endKey,
+        Seq(Number, Text, Even),
+        LessThanFilter(Cell(Number, 4))
+      )
+      val result = pho.read(testTableName, query)
+
+      result must beEqualTo(docs.take(3))
+    }
+
+  }
+
+  "LessThanOrEqualFilter" should {
+
+    "include columns with a lexical value equal to or lower than the one compared" in {
+      val query = Query(
+        docs.head.key,
+        endKey,
+        Seq(Number, Text, Even),
+        LessThanOrEqualFilter(Cell(Number, 4))
+      )
+      val result = pho.read(testTableName, query)
+
+      result must beEqualTo(docs.take(4))
+    }
+
+  }
+
+  "GreaterThanFilter" should {
+
+    "include columns with a lexical value higher than the one compared" in {
+      val query = Query(
+        docs.head.key,
+        endKey,
+        Seq(Number, Text, Even),
+        GreaterThanFilter(Cell(Number, 4))
+      )
+      val result = pho.read(testTableName, query)
+
+      result must beEqualTo(docs.drop(4))
+    }
+
+  }
+
+  "GreaterThanOrEqualFilter" should {
+
+    "include columns with a lexical value higher than the one compared" in {
+      val query = Query(
+        docs.head.key,
+        endKey,
+        Seq(Number, Text, Even),
+        GreaterThanOrEqualFilter(Cell(Number, 4))
+      )
+      val result = pho.read(testTableName, query)
+
+      result must beEqualTo(docs.drop(3))
+    }
+
+  }
+
 }
