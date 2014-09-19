@@ -17,7 +17,7 @@ class DocumentSpec extends Specification {
       val cellB = Cell(colB, 42L)
       val cellC = Cell(colC, 127.toByte)
 
-      val doc = Document(RowKey(9L, PhoenixConverters.LongConverter), Seq(cellA, cellB, cellC))
+      val doc = Document(RowKey(PhoenixConverters.LongConverter, 9L), Seq(cellA, cellB, cellC))
 
       doc.getValue(colC) must beSome(127.toByte)
       doc.getValue(colB) must beSome(42L)

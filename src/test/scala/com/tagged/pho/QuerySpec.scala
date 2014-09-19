@@ -64,14 +64,14 @@ class QuerySpec extends Specification {
   val docs = for (cells <- testData) yield {
     i = i + 1
     val doc = new Document(
-      RowKey(s"$TestPrefix.$now.$i", StringConverter),
+      RowKey(StringConverter, s"$TestPrefix.$now.$i"),
       cells
     )
     pho.write(testTableName, doc)
     doc
   }
 
-  val endKey = RowKey(s"$TestPrefix.$now.Z", StringConverter)
+  val endKey = RowKey(StringConverter, s"$TestPrefix.$now.Z")
 
   "Query" should {
 

@@ -45,7 +45,7 @@ class PhoConnectionSpec extends Specification {
       // write some rows
       for ((i, word) <- Map(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) {
         val doc = new Document(
-          RowKey("readSet." + now + "." + i, StringConverter),
+          RowKey(StringConverter, "readSet." + now + "." + i),
           Seq(Cell(column, word))
         )
         pho.write(testTableName, doc)
@@ -69,7 +69,7 @@ class PhoConnectionSpec extends Specification {
       val column2 = Column(family2, "columnReadWriteTest2", StringConverter)
 
       val doc = Document(
-        RowKey(System.nanoTime().toString, StringConverter),
+        RowKey(StringConverter, System.nanoTime().toString),
         Seq(
           Cell(column1, System.nanoTime().toString),
           Cell(column2, System.nanoTime().toString)
@@ -83,7 +83,7 @@ class PhoConnectionSpec extends Specification {
     }
 
     "read empty column values as None" in {
-      val rowKey = RowKey("emptyReadTest" + System.nanoTime(), StringConverter)
+      val rowKey = RowKey(StringConverter, "emptyReadTest" + System.nanoTime())
       val column = Column(family1, "emptyReadTest", StringConverter)
 
       val readResult = pho.read(testTableName, rowKey, Seq(column))
