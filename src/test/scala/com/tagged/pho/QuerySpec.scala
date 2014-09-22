@@ -1,6 +1,5 @@
 package com.tagged.pho
 
-import com.tagged.pho.converter.IdentityConverter
 import com.tagged.pho.phoenix.PhoenixConverters
 import PhoenixConverters._
 import com.tagged.pho.filter._
