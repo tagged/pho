@@ -31,14 +31,15 @@ class PhoTable(connection: HConnection, tableName: String) {
     }
   }
 
-  def read(rowKey: RowKey[_], columns: Seq[Column[_]]): Seq[Cell[_]] = {
+  def read[A](rowKey: RowKey[A], columns: Seq[Column[_]]): Document[A] = {
     withTable { table =>
       val get = new Get(rowKey.toBytes)
       for (column <- columns) {
         get.addColumn(column.family.bytes, column.qualifierBytes)
       }
       val result = table.get(get)
-      columns.map(_.getCell(result).orNull).filter(_ != null)
+      val cells = columns.map(_.getCell(result).orNull).filter(_ != null)
+      Document(rowKey, cells)
     }
   }
 

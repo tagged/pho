@@ -77,7 +77,7 @@ class PhoTableSpec extends Specification {
       testTable.write(doc)
       val readResult = testTable.read(doc.key, doc.cells.map(_.column))
 
-      readResult must beEqualTo(doc.cells)
+      readResult must beEqualTo(doc)
     }
 
     "read empty column values as None" in {
@@ -86,7 +86,7 @@ class PhoTableSpec extends Specification {
 
       val readResult = testTable.read(rowKey, Seq(column))
 
-      readResult must beEmpty
+      readResult.cells must beEmpty
     }
 
   }
