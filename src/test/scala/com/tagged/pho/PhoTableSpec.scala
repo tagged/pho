@@ -6,7 +6,7 @@ import org.apache.hadoop.hbase.client.{Scan, Get, Put}
 import org.apache.hadoop.hbase.util.Bytes
 import org.specs2.mutable.Specification
 
-class PhoConnectionSpec extends Specification {
+class PhoTableSpec extends Specification {
 
   import TestFixtures._
 
@@ -17,7 +17,7 @@ class PhoConnectionSpec extends Specification {
       val qualifier = Bytes.toBytes("primitiveReadWriteTest")
       val writeValue = Bytes.toBytes(System.nanoTime().toString)
 
-      val readResult = pho.withTable(testTableName) { table =>
+      val readResult = testTable.withTable { table =>
         val put = new Put(rowKey)
         put.add(family1.bytes, qualifier, writeValue)
         table.put(put)
@@ -46,13 +46,13 @@ class PhoConnectionSpec extends Specification {
           RowKey(StringConverter, "readSet." + now + "." + i),
           Seq(Cell(column, word))
         )
-        pho.write(testTableName, doc)
+        testTable.write(doc)
       }
 
       val startRow = Bytes.toBytes("readSet." + now)
       val endRow = Bytes.toBytes("readSet." + (now + 1))
       val scan = new Scan(startRow, endRow)
-      val readResult = pho.withScanner(testTableName, scan) { results =>
+      val readResult = testTable.withScanner(scan) { results =>
         results.map(column.getCell).flatten.map(_.value)
       }
 
@@ -74,8 +74,8 @@ class PhoConnectionSpec extends Specification {
         )
       )
 
-      pho.write(testTableName, doc)
-      val readResult = pho.read(testTableName, doc.key, doc.cells.map(_.column))
+      testTable.write(doc)
+      val readResult = testTable.read(doc.key, doc.cells.map(_.column))
 
       readResult must beEqualTo(doc.cells)
     }
@@ -84,7 +84,7 @@ class PhoConnectionSpec extends Specification {
       val rowKey = RowKey(StringConverter, "emptyReadTest" + System.nanoTime())
       val column = Column(family1, "emptyReadTest", StringConverter)
 
-      val readResult = pho.read(testTableName, rowKey, Seq(column))
+      val readResult = testTable.read(rowKey, Seq(column))
 
       readResult must beEmpty
     }

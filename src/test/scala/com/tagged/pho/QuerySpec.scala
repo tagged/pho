@@ -66,7 +66,7 @@ class QuerySpec extends Specification {
       RowKey(StringConverter, s"$TestPrefix.$now.$i"),
       cells
     )
-    pho.write(testTableName, doc)
+    testTable.write(doc)
     doc
   }
 
@@ -80,7 +80,7 @@ class QuerySpec extends Specification {
         endKey,
         Seq(Number, Text, Even)
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs)
     }
@@ -91,7 +91,7 @@ class QuerySpec extends Specification {
         docs.last.key,
         Seq(Number, Text, Even)
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs.take(docs.length - 1))
     }
@@ -107,7 +107,7 @@ class QuerySpec extends Specification {
         Seq(Number, Text, Even),
         LimitFilter(5)
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs.take(5))
     }
@@ -125,7 +125,7 @@ class QuerySpec extends Specification {
         EqualsFilter(searchCell)
         and LimitFilter(3)
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs.slice(4, 5))
     }
@@ -144,7 +144,7 @@ class QuerySpec extends Specification {
         EqualsFilter(searchCell1)
         or EqualsFilter(searchCell2)
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs.slice(1, 2) ++ docs.slice(4, 5))
     }
@@ -161,7 +161,7 @@ class QuerySpec extends Specification {
         Seq(Number, Text, Even),
         WhileFilter(NotEqualsFilter(searchCell))
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs.slice(0, 4))
     }
@@ -177,7 +177,7 @@ class QuerySpec extends Specification {
         Seq(Number, Text, Even),
         EmptyFilter(Even)
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs.filter(_.getValue(Number).get % 2 == 1))
     }
@@ -193,7 +193,7 @@ class QuerySpec extends Specification {
         Seq(Number, Text, Even),
         NotEmptyFilter(Even)
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs.filter(_.getValue(Number).get % 2 == 0))
     }
@@ -209,7 +209,7 @@ class QuerySpec extends Specification {
         Seq(Number, Text, Even),
         LessThanFilter(Cell(Number, 4))
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs.take(3))
     }
@@ -225,7 +225,7 @@ class QuerySpec extends Specification {
         Seq(Number, Text, Even),
         LessThanOrEqualFilter(Cell(Number, 4))
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs.take(4))
     }
@@ -241,7 +241,7 @@ class QuerySpec extends Specification {
         Seq(Number, Text, Even),
         GreaterThanFilter(Cell(Number, 4))
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs.drop(4))
     }
@@ -257,7 +257,7 @@ class QuerySpec extends Specification {
         Seq(Number, Text, Even),
         GreaterThanOrEqualFilter(Cell(Number, 4))
       )
-      val result = pho.read(testTableName, query)
+      val result = testTable.read(query)
 
       result must beEqualTo(docs.drop(3))
     }

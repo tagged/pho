@@ -3,10 +3,10 @@ package com.tagged.pho
 import org.apache.hadoop.hbase.client._
 import scala.collection.JavaConverters._
 
-class PhoConnection(connection: HConnection) {
+class PhoTable(connection: HConnection, tableName: String) {
 
-  def withTable[A](name: String)(block: HTableInterface => A) = {
-    val table = connection.getTable(name)
+  def withTable[A](block: HTableInterface => A) = {
+    val table = connection.getTable(tableName)
     try {
       block(table)
     } finally {
@@ -14,8 +14,8 @@ class PhoConnection(connection: HConnection) {
     }
   }
 
-  def withScanner[A](name: String, scan: Scan)(block: Seq[Result] => A) = {
-    withTable(name) { table =>
+  def withScanner[A](scan: Scan)(block: Seq[Result] => A) = {
+    withTable { table =>
       val scanner = table.getScanner(scan)
       try {
         block(scanner.asScala.toSeq)
@@ -25,14 +25,14 @@ class PhoConnection(connection: HConnection) {
     }
   }
 
-  def write(tableName: String, doc: Document[_]) = {
-    withTable(tableName) { table =>
+  def write(doc: Document[_]) = {
+    withTable { table =>
       table.put(doc.getPut)
     }
   }
 
-  def read(tableName: String, rowKey: RowKey[_], columns: Seq[Column[_]]): Seq[Cell[_]] = {
-    withTable(tableName) { table =>
+  def read(rowKey: RowKey[_], columns: Seq[Column[_]]): Seq[Cell[_]] = {
+    withTable { table =>
       val get = new Get(rowKey.toBytes)
       for (column <- columns) {
         get.addColumn(column.family.bytes, column.qualifierBytes)
@@ -42,8 +42,8 @@ class PhoConnection(connection: HConnection) {
     }
   }
 
-  def read[A](tableName: String, query: Query[A]): Seq[Document[A]] = {
-    withScanner(tableName, query.getScan) { scanner =>
+  def read[A](query: Query[A]): Seq[Document[A]] = {
+    withScanner(query.getScan) { scanner =>
       scanner.map({ result =>
         val key = query.startRow.getRowKey(result)
         val cells = query.columns.map(_.getCell(result).orNull).filter(_ != null)

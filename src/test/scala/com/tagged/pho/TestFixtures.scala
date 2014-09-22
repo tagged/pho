@@ -22,6 +22,6 @@ object TestFixtures {
   }
 
   val connection = HConnectionManager.createConnection(configuration)
-  val pho = new PhoConnection(connection)
+  val testTable = new PhoTable(connection, testTableName)
 
 }
