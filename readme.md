@@ -8,36 +8,37 @@ example usage
 
 ### define a schema
 
-    // table name
-    val tableName = "MyTable"
+    class MyTable(connection: HConnection) extends PhoTable(connection, "MyTable") {
+      // converters convert types to bytes and bytes to types
+      val RowKeyConverter = PhoenixConverters.IntConverter
+    
+      // a pho column is defined by a family, qualifier and converter
+      val cf1 = ColumnFamily("cf1")
+      val col1 = Column(cf1, "col1", PhoenixConverters.StringConverter)
+    }
 
-    // converters convert types to bytes and bytes to types
-    val rowKeyConverter = PhoenixConverters.IntConverter
-
-    // a pho column is defined by a family, qualifier and converter
-    val cf1 = ColumnFamily("cf1")
-    val col1 = Column(cf1, "col1", PhoenixConverters.StringConverter)
-
-### get a pho connection
+### get a connection and table instance
 
     zkQuorum = "localhost"
     val configuration = HBaseConfiguration.create()
     configuration.set("hbase.zookeeper.quorum", zkQuorum)
     val connection = HConnectionManager.createConnection(configuration)
-    val pho = new PhoConnection(connection)
+
+    val myTable = new MyTable(connection)
 
 ### write a document into the table
 
-    val rowKey = RowKey(rowKeyConverter, 42)
-    val doc = Document(rowKey, Seq(
-      Cell(col1, "Arthur Dent")
+    // this could be a made a method of MyTable
+    val key = RowKey(MyTable.RowKeyConverter, 42)
+    val doc = Document(key, Seq(
+      Cell(MyTable.col1, "Arthur Dent")
     ))
-    pho.write(tableName, doc)
+    myTable.write(doc)
 
 ### read cells from the table
 
-    val retrievedCells = pho.read(tableName, rowKey, Seq(col1))
-    // returns Cell(col1, "Arthur Dent")
+    val doc = myTable.read(key, Seq(col1))
+    // returns Document(key, Seq(Cell(col1, "Arthur Dent")))
 
 ### query rows from the table
 
@@ -48,8 +49,8 @@ example usage
         endKey,
         Seq(col1)  // included in the result set
     )
-    val resultSet = pho.read(tableName, query)
-    // returns Seq(Cell(col1, "Arthur Dent"))
+    val resultSet = myTable.read(query)
+    // returns Document(key, Seq(Cell(col1, "Arthur Dent")))
 
 ### limit the query result to 10 results
 
