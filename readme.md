@@ -1,9 +1,11 @@
-pho
+Pho
 ===
 
-Another client library for interacting with HBase.
+Pho is an HBase client library.
+Its primary purpose is to simplify working with HBase data through `get`, `put` and `scan`.
+This is mostly accomplished by encoding/decoding scala data types to/from arrays of HBase bytes.
 
-example usage
+Example usage
 -------------
 
 ### define a schema
@@ -79,7 +81,7 @@ example usage
         LimitFilter(1) and EqualsFilter(Cell(col1, "Arthur Dent"))   // get first person named "Arthur Dent"
     )
 
-license
+License
 -------
 
 Pho: Copyright 2014 Tagged, Inc.
