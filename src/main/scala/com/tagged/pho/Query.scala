@@ -18,6 +18,7 @@ package com.tagged.pho
 
 import com.tagged.pho.filter.{NoOpFilter, PhoFilter}
 import org.apache.hadoop.hbase.client.Scan
+import scala.language.existentials
 
 case class Query[A](
                      startRow: RowKey[A],

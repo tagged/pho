@@ -4,6 +4,8 @@ organization := "com.tagged"
 
 version := "0.2.7"
 
+scalacOptions ++= Seq("-deprecation", "-feature")
+
 libraryDependencies ++= {
   val hadoopV = "2.4.1"
   val hbaseV = "0.98.5-hadoop2"

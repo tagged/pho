@@ -19,6 +19,7 @@ package com.tagged.pho.filter
 import com.tagged.pho.Column
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp
 import org.apache.hadoop.hbase.filter.{SingleColumnValueFilter, Filter}
+import scala.language.existentials
 
 case class NotEmptyFilter(column: Column[_]) extends PhoFilter {
 

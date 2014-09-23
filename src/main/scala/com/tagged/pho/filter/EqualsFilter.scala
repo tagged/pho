@@ -18,6 +18,7 @@ package com.tagged.pho.filter
 
 import com.tagged.pho.Cell
 import org.apache.hadoop.hbase.filter.{Filter, CompareFilter, SingleColumnValueFilter}
+import scala.language.existentials
 
 /**
  * If the column value does not exist,
