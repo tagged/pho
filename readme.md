@@ -81,6 +81,20 @@ Example usage
         LimitFilter(1) and EqualsFilter(Cell(col1, "Arthur Dent"))   // get first person named "Arthur Dent"
     )
 
+Testing
+-------
+
+The tests in this library require an HBase cluster.
+The following table definition must be setup prior to testing.
+
+From the HBase shell:
+
+    create 'PhoIntegrationTests', 'family1', 'family2'
+
+Run the tests:
+
+    sbt -Dhbase.zookeeper.quorum=zk.quorum.host clean test
+
 License
 -------
 
