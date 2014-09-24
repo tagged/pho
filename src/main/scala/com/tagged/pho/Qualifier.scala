@@ -16,19 +16,16 @@
 
 package com.tagged.pho
 
-import org.apache.hadoop.hbase.util.Bytes
+case class Qualifier(bytes: Array[Byte]) extends Identifier(bytes) {
 
-case class Qualifier(name: String) {
+  def this(name: String) = this(Identifier.bytesFromString(name))
 
-  lazy val bytes = Bytes.toBytes(name)
+  override def toString: String = super.toString
 
 }
 
 object Qualifier {
 
-  def apply(bytes: Array[Byte]): Qualifier = {
-    val name = Bytes.toString(bytes)
-    Qualifier(name)
-  }
+  def apply(name: String): Qualifier = new Qualifier(name)
 
 }

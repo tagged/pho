@@ -16,20 +16,16 @@
 
 package com.tagged.pho
 
-/**
- * A grouping of columns,
- * contained within a shared unit of physical storage.
- */
-case class ColumnFamily(bytes: Array[Byte]) extends Identifier(bytes) {
+import org.specs2.mutable.Specification
 
-  def this(name: String) = this(Identifier.bytesFromString(name))
+class ColumnFamilySpec extends Specification {
 
-  override def toString: String = super.toString
+  "toString" should {
 
-}
+    "be brief and legible" in {
+      ColumnFamily("foo").toString must beEqualTo("ColumnFamily(foo)")
+    }
 
-object ColumnFamily {
-
-  def apply(name: String): ColumnFamily = new ColumnFamily(name)
+  }
 
 }
