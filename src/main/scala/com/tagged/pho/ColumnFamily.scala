@@ -29,3 +29,12 @@ case class ColumnFamily(name: String) {
   lazy val bytes = Bytes.toBytes(name)
 
 }
+
+object ColumnFamily {
+
+  def apply(bytes: Array[Byte]): ColumnFamily = {
+    val name = Bytes.toString(bytes)
+    ColumnFamily(name)
+  }
+
+}

@@ -16,7 +16,9 @@
 
 package com.tagged.pho
 
+import com.tagged.pho.converter.IdentityConverter
 import org.apache.hadoop.hbase.client._
+import org.apache.hadoop.hbase.util.Bytes
 import scala.collection.JavaConverters._
 
 class PhoTable(connection: HConnection, tableName: String) {
@@ -60,11 +62,31 @@ class PhoTable(connection: HConnection, tableName: String) {
   }
 
   def read[A](query: Query[A]): Seq[Document[A]] = {
+    val map: Map[ColumnFamily,Map[String,Column[_]]] = query.columns
+      .groupBy(_.family)
+      .mapValues(_.map({ column =>
+        column.qualifier -> column
+      }).toMap)
     withScanner(query.getScan) { scanner =>
       scanner.map({ result =>
         val key = query.startRow.getRowKey(result)
-        val cells = query.columns.map(_.getCell(result).orNull).filter(_ != null)
-        Document(key, cells)
+        val cells = for ((familyBytes: Array[Byte], qualifiers) <- result.getMap.asScala) yield {
+          val family = ColumnFamily(familyBytes)
+          for ((qualifierBytes: Array[Byte], values) <- qualifiers.asScala) yield {
+            val qualifier = Bytes.toString(qualifierBytes)
+            val column = map.get(family) match {
+              case Some(columns) => columns.get(qualifier) match {
+                case Some(column) => column
+                case None => Column(family, qualifierBytes, IdentityConverter)
+              }
+              case None => Column(family, qualifierBytes, IdentityConverter)
+            }
+            for ((version: java.lang.Long, valueBytes: Array[Byte]) <- values.asScala) yield {
+              column.getCell(valueBytes)
+            }
+          }
+        }
+        Document(key, cells.flatten.flatten.toSeq)
       })
     }
   }

@@ -36,36 +36,36 @@ class QuerySpec extends Specification {
       Cell(Text, "one")
     ),
     Seq(
+      Cell(Even, true),
       Cell(Number, 2),
-      Cell(Text, "two"),
-      Cell(Even, true)
+      Cell(Text, "two")
     ),
     Seq(
       Cell(Number, 3),
       Cell(Text, "three")
     ),
     Seq(
+      Cell(Even, true),
       Cell(Number, 4),
-      Cell(Text, "four"),
-      Cell(Even, true)
+      Cell(Text, "four")
     ),
     Seq(
       Cell(Number, 5),
       Cell(Text, "five")
     ),
     Seq(
+      Cell(Even, true),
       Cell(Number, 6),
-      Cell(Text, "six"),
-      Cell(Even, true)
+      Cell(Text, "six")
     ),
     Seq(
       Cell(Number, 7),
       Cell(Text, "seven")
     ),
     Seq(
+      Cell(Even, true),
       Cell(Number, 8),
-      Cell(Text, "eight"),
-      Cell(Even, true)
+      Cell(Text, "eight")
     ),
     Seq(
       Cell(Number, 9),
@@ -98,7 +98,7 @@ class QuerySpec extends Specification {
       )
       val result = testTable.read(query)
 
-      result must beEqualTo(docs)
+      result.toList must beEqualTo(docs)
     }
 
     "use an inclusive start key, but exclusive end key" in {
@@ -133,7 +133,7 @@ class QuerySpec extends Specification {
   "EqualsFilter" should {
 
     "let us find elements with matching cell values" in {
-      val searchCell = docs.slice(4, 5).head.cells.head
+      val searchCell = docs.slice(4, 5).head.getCell(Number).get
       val query = Query(
         docs.head.key,
         endKey,
@@ -151,8 +151,8 @@ class QuerySpec extends Specification {
   "OrFilter" should {
 
     "let us combine filters" in {
-      val searchCell1 = docs.slice(1, 2).head.cells.head
-      val searchCell2 = docs.slice(4, 5).head.cells.head
+      val searchCell1 = docs.slice(1, 2).head.getCell(Number).get
+      val searchCell2 = docs.slice(4, 5).head.getCell(Number).get
       val query = Query(
         docs.head.key,
         endKey,
@@ -162,7 +162,7 @@ class QuerySpec extends Specification {
       )
       val result = testTable.read(query)
 
-      result must beEqualTo(docs.slice(1, 2) ++ docs.slice(4, 5))
+      result.toList must beEqualTo(docs.slice(1, 2) ++ docs.slice(4, 5))
     }
 
   }
@@ -170,7 +170,7 @@ class QuerySpec extends Specification {
   "WhileFilter" should {
 
     "continue until a particular result is found" in {
-      val searchCell = docs.slice(4,5).head.cells.head
+      val searchCell = docs.slice(4,5).head.getCell(Number).get
       val query = Query(
         docs.head.key,
         endKey,

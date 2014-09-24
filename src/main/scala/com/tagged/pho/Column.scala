@@ -44,4 +44,18 @@ case class Column[A](family: ColumnFamily, qualifier: String, converter: PhoConv
     }
   }
 
+  def getCell(bytes: Array[Byte]): Cell[A] = {
+    val value = converter.getValue(bytes)
+    Cell(this, value)
+  }
+
+}
+
+object Column {
+
+  def apply[A](family: ColumnFamily, qualifierBytes: Array[Byte], converter: PhoConverter[A]): Column[A] = {
+    val qualifier = Bytes.toString(qualifierBytes)
+    Column(family, qualifier, converter)
+  }
+
 }

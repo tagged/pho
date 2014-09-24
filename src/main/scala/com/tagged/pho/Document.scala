@@ -39,10 +39,14 @@ case class Document[A](key: RowKey[A], cells: Seq[Cell[_]], version: Option[Vers
    * @return       the optional value if it exists
    */
   def getValue[X](column: Column[X]): Option[X] = {
-    cells.find(_.column == column) match {
-      case Some(cell) => Option(cell.value.asInstanceOf[X])
+    getCell(column) match {
+      case Some(cell) => Option(cell.value)
       case None => None
     }
+  }
+
+  def getCell[X](column: Column[X]): Option[Cell[X]] = {
+    cells.find(_.column == column).asInstanceOf[Option[Cell[X]]]
   }
 
   /**
