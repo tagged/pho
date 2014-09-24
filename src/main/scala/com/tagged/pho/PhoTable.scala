@@ -18,7 +18,6 @@ package com.tagged.pho
 
 import com.tagged.pho.converter.IdentityConverter
 import org.apache.hadoop.hbase.client._
-import org.apache.hadoop.hbase.util.Bytes
 import scala.collection.JavaConverters._
 
 class PhoTable(connection: HConnection, tableName: String) {
