@@ -16,6 +16,9 @@
 
 package com.tagged.pho
 
+/**
+ * Aka, column name.
+ */
 case class Qualifier(bytes: Array[Byte]) extends Identifier(bytes) {
 
   def this(name: String) = this(Identifier.bytesFromString(name))

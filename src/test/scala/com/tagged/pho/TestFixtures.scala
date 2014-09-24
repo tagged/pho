@@ -32,7 +32,6 @@ object TestFixtures {
   val family2 = ColumnFamily("family2")
 
   val configuration = HBaseConfiguration.create()
-  configuration.set("hbase.client.retries.number", "1")
   scala.util.Properties.propOrNone("hbase.zookeeper.quorum") match {
     case Some(quorum) => configuration.set("hbase.zookeeper.quorum", quorum)
     case None => Unit
