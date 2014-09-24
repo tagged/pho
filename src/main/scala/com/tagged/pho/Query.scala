@@ -30,7 +30,7 @@ case class Query[A](
   def getScan = {
     val scan = new Scan(startRow.toBytes, endRow.toBytes)
     for (column <- columns) {
-      scan.addColumn(column.family.bytes, column.qualifierBytes)
+      scan.addColumn(column.family.bytes, column.qualifier.bytes)
     }
     filter.addFilterTo(scan)
     scan

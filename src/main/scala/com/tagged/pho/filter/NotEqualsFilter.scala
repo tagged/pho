@@ -30,7 +30,7 @@ case class NotEqualsFilter(cell: Cell[_]) extends PhoFilter {
   def getFilter: Filter = {
     val filter = new SingleColumnValueFilter(
       cell.column.family.bytes,
-      cell.column.qualifierBytes,
+      cell.column.qualifier.bytes,
       CompareFilter.CompareOp.NOT_EQUAL,
       cell.valueBytes
     )

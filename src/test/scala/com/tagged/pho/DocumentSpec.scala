@@ -24,10 +24,10 @@ class DocumentSpec extends Specification {
   "getValue" should {
 
     "return the value matching a column" in {
-      val colA = Column(ColumnFamily("fam1"), "A", PhoenixConverters.StringConverter)
-      val colB = Column(ColumnFamily("fam2"), "B", PhoenixConverters.LongConverter)
-      val colC = Column(ColumnFamily("fam3"), "C", PhoenixConverters.ByteConverter)
-      val colD = Column(ColumnFamily("fam3"), "D", PhoenixConverters.ByteConverter)
+      val colA = Column(ColumnFamily("fam1"), Qualifier("A"), PhoenixConverters.StringConverter)
+      val colB = Column(ColumnFamily("fam2"), Qualifier("B"), PhoenixConverters.LongConverter)
+      val colC = Column(ColumnFamily("fam3"), Qualifier("C"), PhoenixConverters.ByteConverter)
+      val colD = Column(ColumnFamily("fam3"), Qualifier("D"), PhoenixConverters.ByteConverter)
 
       val cellA = Cell(colA, "Hello")
       val cellB = Cell(colB, 42L)

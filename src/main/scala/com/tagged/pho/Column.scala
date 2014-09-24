@@ -29,12 +29,10 @@ import org.apache.hadoop.hbase.util.Bytes
  * @param converter for translating from bytes to values and vice-versa
  * @tparam A        the high-level type stored in this column
  */
-case class Column[A](family: ColumnFamily, qualifier: String, converter: PhoConverter[A]) {
-
-  lazy val qualifierBytes: Array[Byte] = Bytes.toBytes(qualifier)
+case class Column[A](family: ColumnFamily, qualifier: Qualifier, converter: PhoConverter[A]) {
 
   def getCell(result: Result): Option[Cell[A]] = {
-    result.getValue(family.bytes, qualifierBytes) match {
+    result.getValue(family.bytes, qualifier.bytes) match {
       case null => None
       case bytes =>
         converter.getValue(bytes) match {
@@ -47,15 +45,6 @@ case class Column[A](family: ColumnFamily, qualifier: String, converter: PhoConv
   def getCell(bytes: Array[Byte]): Cell[A] = {
     val value = converter.getValue(bytes)
     Cell(this, value)
-  }
-
-}
-
-object Column {
-
-  def apply[A](family: ColumnFamily, qualifierBytes: Array[Byte], converter: PhoConverter[A]): Column[A] = {
-    val qualifier = Bytes.toString(qualifierBytes)
-    Column(family, qualifier, converter)
   }
 
 }

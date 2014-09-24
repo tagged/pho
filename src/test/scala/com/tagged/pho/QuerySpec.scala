@@ -26,9 +26,9 @@ class QuerySpec extends Specification {
   import TestFixtures._
 
   val TestPrefix = "QuerySpec"
-  val Number = Column(family1, s"$TestPrefix.Number", IntConverter)
-  val Text   = Column(family1, s"$TestPrefix.Text", StringConverter)
-  val Even   = Column(family1, s"$TestPrefix.Even", BooleanConverter)
+  val Number = Column(family1, Qualifier(s"$TestPrefix.Number"), IntConverter)
+  val Text   = Column(family1, Qualifier(s"$TestPrefix.Text"), StringConverter)
+  val Even   = Column(family1, Qualifier(s"$TestPrefix.Even"), BooleanConverter)
 
   val testData = Seq(
     Seq(

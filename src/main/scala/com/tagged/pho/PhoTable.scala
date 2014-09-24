@@ -53,7 +53,7 @@ class PhoTable(connection: HConnection, tableName: String) {
     withTable { table =>
       val get = new Get(rowKey.toBytes)
       for (column <- columns) {
-        get.addColumn(column.family.bytes, column.qualifierBytes)
+        get.addColumn(column.family.bytes, column.qualifier.bytes)
       }
       val result = table.get(get)
       val cells = columns.map(_.getCell(result).orNull).filter(_ != null)
@@ -62,7 +62,7 @@ class PhoTable(connection: HConnection, tableName: String) {
   }
 
   def read[A](query: Query[A]): Seq[Document[A]] = {
-    val map: Map[ColumnFamily,Map[String,Column[_]]] = query.columns
+    val map: Map[ColumnFamily,Map[Qualifier,Column[_]]] = query.columns
       .groupBy(_.family)
       .mapValues(_.map({ column =>
         column.qualifier -> column
@@ -73,13 +73,13 @@ class PhoTable(connection: HConnection, tableName: String) {
         val cells = for ((familyBytes: Array[Byte], qualifiers) <- result.getMap.asScala) yield {
           val family = ColumnFamily(familyBytes)
           for ((qualifierBytes: Array[Byte], values) <- qualifiers.asScala) yield {
-            val qualifier = Bytes.toString(qualifierBytes)
+            val qualifier = Qualifier(qualifierBytes)
             val column = map.get(family) match {
               case Some(columns) => columns.get(qualifier) match {
                 case Some(column) => column
-                case None => Column(family, qualifierBytes, IdentityConverter)
+                case None => Column(family, qualifier, IdentityConverter)
               }
-              case None => Column(family, qualifierBytes, IdentityConverter)
+              case None => Column(family, qualifier, IdentityConverter)
             }
             for ((version: java.lang.Long, valueBytes: Array[Byte]) <- values.asScala) yield {
               column.getCell(valueBytes)

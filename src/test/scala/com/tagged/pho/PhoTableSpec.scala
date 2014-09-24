@@ -54,7 +54,7 @@ class PhoTableSpec extends Specification {
 
     "let us scan using primitives" in {
       val now = System.nanoTime()
-      val column = Column(family1, "resultSetTest", StringConverter)
+      val column = Column(family1, Qualifier("resultSetTest"), StringConverter)
 
       // write some rows
       for ((i, word) <- Map(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) {
@@ -79,8 +79,8 @@ class PhoTableSpec extends Specification {
   "write/read single row key" should {
 
     "let us write and read specific column values" in {
-      val column1 = Column(family1, "columnReadWriteTest1", StringConverter)
-      val column2 = Column(family2, "columnReadWriteTest2", StringConverter)
+      val column1 = Column(family1, Qualifier("columnReadWriteTest1"), StringConverter)
+      val column2 = Column(family2, Qualifier("columnReadWriteTest2"), StringConverter)
 
       val doc = Document(
         RowKey(StringConverter, System.nanoTime().toString),
@@ -98,7 +98,7 @@ class PhoTableSpec extends Specification {
 
     "read empty column values as None" in {
       val rowKey = RowKey(StringConverter, "emptyReadTest" + System.nanoTime())
-      val column = Column(family1, "emptyReadTest", StringConverter)
+      val column = Column(family1, Qualifier("emptyReadTest"), StringConverter)
 
       val readResult = testTable.read(rowKey, Seq(column))
 

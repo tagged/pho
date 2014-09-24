@@ -24,7 +24,7 @@ import scala.language.existentials
 case class NotEmptyFilter(column: Column[_]) extends PhoFilter {
 
   override def getFilter: Filter = {
-    val filter = new SingleColumnValueFilter(column.family.bytes, column.qualifierBytes, CompareOp.NOT_EQUAL, Array[Byte]())
+    val filter = new SingleColumnValueFilter(column.family.bytes, column.qualifier.bytes, CompareOp.NOT_EQUAL, Array[Byte]())
     filter.setFilterIfMissing(true)
     filter
   }

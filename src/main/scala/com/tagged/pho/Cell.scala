@@ -33,8 +33,8 @@ case class Cell[A](column: Column[A], value: A, version: Option[Version] = None)
   def valueBytes: Array[Byte] = column.converter.toBytes(value)
 
   def addToPut(put: Put) = version match {
-    case Some(v) => put.add(column.family.bytes, column.qualifierBytes, v.timestamp, valueBytes)
-    case None    => put.add(column.family.bytes, column.qualifierBytes, valueBytes)
+    case Some(v) => put.add(column.family.bytes, column.qualifier.bytes, v.timestamp, valueBytes)
+    case None    => put.add(column.family.bytes, column.qualifier.bytes, valueBytes)
   }
 
 }

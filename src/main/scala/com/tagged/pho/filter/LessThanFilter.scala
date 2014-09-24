@@ -25,7 +25,7 @@ case class LessThanFilter(cell: Cell[_]) extends PhoFilter {
   override def getFilter: Filter = {
     val filter = new SingleColumnValueFilter(
       cell.column.family.bytes,
-      cell.column.qualifierBytes,
+      cell.column.qualifier.bytes,
       CompareFilter.CompareOp.LESS,
       cell.valueBytes
     )
