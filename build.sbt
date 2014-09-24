@@ -2,7 +2,7 @@ name := "pho"
 
 organization := "com.tagged"
 
-version := "0.2.7"
+version := "0.2.8"
 
 scalacOptions ++= Seq("-deprecation", "-feature")
 
