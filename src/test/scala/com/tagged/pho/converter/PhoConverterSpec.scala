@@ -16,12 +16,22 @@
 
 package com.tagged.pho.converter
 
-import com.tagged.pho.phoenix.PhoenixConverters
-import PhoenixConverters.LongConverter
+import com.tagged.pho.phoenix.PhoenixConverters._
 import org.specs2.matcher.DataTables
 import org.specs2.mutable.Specification
+import scala.runtime.BoxedUnit
 
 class PhoConverterSpec extends Specification with DataTables {
+
+  "EmptyConverter" should {
+
+    "convert from Unit to empty array" in {
+      EmptyConverter.getValue(Array[Byte]()) must beAnInstanceOf[BoxedUnit]
+      EmptyConverter.getValue(Array[Byte](23, 0, 12)) must beAnInstanceOf[BoxedUnit]
+      EmptyConverter.toBytes() must beEqualTo(Array[Byte]())
+    }
+
+  }
 
   "IdentityConverter" should {
 
