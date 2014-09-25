@@ -17,16 +17,18 @@
 package com.tagged.pho
 
 import com.tagged.pho.converter.PhoConverter
-import org.apache.hadoop.hbase.client.Result
 
 case class RowKey[T](converter: PhoConverter[T], value: T) {
 
   def toBytes: Array[Byte] = converter.toBytes(value)
 
-  def getRowKey(result: Result): RowKey[T] = {
-    val bytes = result.getRow
+}
+
+object RowKey {
+
+  def apply[A](converter: PhoConverter[A], bytes: Array[Byte]): RowKey[A] = {
     val value = converter.getValue(bytes)
-    copy(value = value)
+    RowKey(converter, value)
   }
 
 }

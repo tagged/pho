@@ -39,7 +39,7 @@ class ResultReader[A](rowKeyConverter: PhoConverter[A], columns: Seq[Column[_]])
   }
 
   def apply(result: Result): Document[A] = {
-    val key = RowKey(rowKeyConverter, rowKeyConverter.getValue(result.getRow))
+    val key = RowKey(rowKeyConverter, result.getRow)
     val cells = for ((familyBytes: Array[Byte], qualifiers) <- result.getMap.asScala) yield {
       val family = ColumnFamily(familyBytes)
       for ((qualifierBytes: Array[Byte], values) <- qualifiers.asScala) yield {
