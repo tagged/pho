@@ -1,7 +1,7 @@
 Pho
 ===
 
-Pho is an HBase client library,
+Pho is an HBase client wrapper,
 originally developed to enable hacking on [Phoenix](http://phoenix.apache.org/) tables
 using the raw HBase client library.
 It simplifies working with HBase data through `get`, `put` and `scan`
