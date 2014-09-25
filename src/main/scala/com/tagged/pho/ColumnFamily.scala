@@ -20,7 +20,7 @@ package com.tagged.pho
  * A grouping of columns,
  * contained within a shared unit of physical storage.
  */
-case class ColumnFamily(bytes: Array[Byte]) extends Identifier(bytes) {
+class ColumnFamily(bytes: Array[Byte]) extends Identifier(bytes) {
 
   def this(name: String) = this(Identifier.bytesFromString(name))
 
@@ -30,6 +30,7 @@ case class ColumnFamily(bytes: Array[Byte]) extends Identifier(bytes) {
 
 object ColumnFamily {
 
+  def apply(bytes: Array[Byte]): ColumnFamily = new ColumnFamily(bytes)
   def apply(name: String): ColumnFamily = new ColumnFamily(name)
 
 }

@@ -24,7 +24,7 @@ import org.apache.hadoop.hbase.util.Bytes
  * the number of conversions to/from strings should be reduced
  * particularly in large scan results.
  */
-class Identifier(private val bytes: Array[Byte]) {
+class Identifier(val bytes: Array[Byte]) {
 
   def this(name: String) = this(Identifier.bytesFromString(name))
 
