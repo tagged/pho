@@ -1,9 +1,12 @@
 Pho
 ===
 
-Pho is an HBase client library.
-Its primary purpose is to simplify working with HBase data through `get`, `put` and `scan`.
-This is mostly accomplished by encoding/decoding scala data types to/from arrays of HBase bytes.
+Pho is an HBase client library,
+originally developed to enable hacking on [Phoenix](http://phoenix.apache.org/) tables
+using the raw HBase client library.
+It simplifies working with HBase data through `get`, `put` and `scan`
+by converting scala data types to and from byte arrays,
+the underlying currency of HBase data.
 
 Example usage
 -------------
