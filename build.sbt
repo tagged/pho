@@ -13,8 +13,20 @@ libraryDependencies ++= {
     "org.apache.hadoop" % "hadoop-common" % hadoopV,
     "org.apache.hbase" % "hbase-common" % hbaseV,
     "org.apache.hbase" % "hbase-client" % hbaseV,
+    "org.apache.hbase" % "hbase-server" % hbaseV,  // required by phoenix 4.0 client
     "org.specs2" %% "specs2" % "2.4.2" % "test"
   )
+}
+
+unmanagedClasspath in Test ++= {
+  // let developers append to the classpath for phoenix (and other) testing
+  System.getenv("TEST_CLASSPATH") match {
+    case null => Seq()
+    case cp =>
+      val addendum = cp.split(System.getProperty("path.separator")).map(file).toSeq
+      streams.value.log.info("unmanagedClasspath in Test ++= " + addendum.mkString(", "))
+      addendum
+  }
 }
 
 crossPaths := false

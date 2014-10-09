@@ -42,6 +42,11 @@ object TestFixtures {
     }
   }
 
+  val hbaseZookeeperQuorum = configuration.get("hbase.zookeeper.quorum") match {
+    case null => "localhost"
+    case x: String => x
+  }
+
   val connection = HConnectionManager.createConnection(configuration)
   val testTable = new PhoTable(connection, testTableName)
 
