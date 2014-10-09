@@ -16,8 +16,8 @@
 
 package com.tagged.pho
 
-import org.apache.hadoop.hbase.HBaseConfiguration
-import org.apache.hadoop.hbase.client.HConnectionManager
+import org.apache.hadoop.hbase.{HColumnDescriptor, TableName, HTableDescriptor, HBaseConfiguration}
+import org.apache.hadoop.hbase.client.{HBaseAdmin, HConnectionManager}
 
 /**
  * These tests require that a test table be pre-created on the HBase cluster.
@@ -35,6 +35,14 @@ object TestFixtures {
   scala.util.Properties.propOrNone("hbase.zookeeper.quorum") match {
     case Some(quorum) => configuration.set("hbase.zookeeper.quorum", quorum)
     case None => Unit
+  }
+
+  val admin = new HBaseAdmin(configuration)
+  if (!admin.tableExists(testTableName)) {
+    val descriptor = new HTableDescriptor(TableName.valueOf(testTableName))
+    descriptor.addFamily(new HColumnDescriptor(family1.bytes))
+    descriptor.addFamily(new HColumnDescriptor(family2.bytes))
+    admin.createTable(descriptor)
   }
 
   val connection = HConnectionManager.createConnection(configuration)
