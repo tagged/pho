@@ -7,8 +7,8 @@ version := "0.2.8"
 scalacOptions ++= Seq("-deprecation", "-feature")
 
 libraryDependencies ++= {
-  val hadoopV = "2.4.1"
-  val hbaseV = "0.98.5-hadoop2"
+  val hadoopV = "2.5.1"
+  val hbaseV = "0.98.6.1-hadoop2"
   Seq(
     "org.apache.hadoop" % "hadoop-common" % hadoopV,
     "org.apache.hbase" % "hbase-common" % hbaseV,
