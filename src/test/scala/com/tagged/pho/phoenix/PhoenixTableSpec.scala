@@ -34,4 +34,22 @@ class PhoenixTableSpec extends Specification {
 
   }
 
+  "select" should {
+
+    "read the state of a phoenix table" in {
+      val systemCatalog = select("SELECT * FROM system.catalog")
+      systemCatalog.length must beGreaterThan(0)
+    }
+
+  }
+
+  "execute" should {
+
+    "let us make new tables" in {
+      execute("CREATE TABLE IF NOT EXISTS foo (foo_id INTEGER PRIMARY KEY, bar VARCHAR)")
+      success
+    }
+
+  }
+
 }

@@ -17,7 +17,7 @@
 package com.tagged.pho.phoenix
 
 import com.tagged.pho.TestFixtures
-import java.sql.{Connection, DriverManager}
+import java.sql.{ResultSet, Connection, DriverManager}
 
 /**
  * To make it possible to get a phoenix jdbc connection,
@@ -45,6 +45,36 @@ object PhoenixFixtures {
     } finally {
       connection.close()
     }
+  }
+
+  /* Generator for mapping ResultSet rows */
+  implicit class ResultIterator(set: ResultSet) extends Iterator[ResultSet] {
+    def hasNext: Boolean = set.next()
+    def next(): ResultSet = set
+  }
+
+  def select(sql: String): List[Map[String,Any]] = {
+    withConnection({ connection =>
+      val statement = connection.prepareStatement(sql)
+      val result = statement.executeQuery()
+      val meta = result.getMetaData()
+      val columnCount = meta.getColumnCount()
+      val columns = for (i <- 1 to columnCount) yield {
+        meta.getColumnName(i)
+      }
+      result.map({ row =>
+        columns.map({ column =>
+          (column, row.getObject(column))
+        }).toMap
+      }).toList
+    })
+  }
+
+  def execute(sql: String): Unit = {
+    withConnection({ connection =>
+      val statement = connection.prepareStatement(sql)
+      statement.execute()
+    })
   }
 
 }
