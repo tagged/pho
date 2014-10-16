@@ -57,8 +57,8 @@ object PhoenixFixtures {
     withConnection({ connection =>
       val statement = connection.prepareStatement(sql)
       val result = statement.executeQuery()
-      val meta = result.getMetaData()
-      val columnCount = meta.getColumnCount()
+      val meta = result.getMetaData
+      val columnCount = meta.getColumnCount
       val columns = for (i <- 1 to columnCount) yield {
         meta.getColumnName(i)
       }
