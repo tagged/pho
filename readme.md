@@ -87,16 +87,16 @@ Example usage
 Testing
 -------
 
-The tests in this library require an HBase cluster.
-The following table definition must be setup prior to testing.
+The tests in this library require an HBase cluster,
+and will automatically create a table called 'PhoIntegrationTests'.
 
-From the HBase shell:
+Run the tests (using an HBase on localhost):
 
-    create 'PhoIntegrationTests', 'family1', 'family2'
+    sbt test
 
-Run the tests:
+Run the tests on an external HBase cluster:
 
-    sbt -Dhbase.zookeeper.quorum=zk.quorum.host clean test
+    sbt -Dhbase.zookeeper.quorum=zk.quorum.host test
 
 License
 -------
