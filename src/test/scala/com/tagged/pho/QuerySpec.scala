@@ -89,7 +89,7 @@ class QuerySpec extends Specification {
 
   "Query" should {
 
-    "retreive all documents in the original set" in {
+    "retrieve all documents in the original set" in {
       val query = Query(
         docs.head.key,
         endKey,
