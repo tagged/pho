@@ -16,27 +16,18 @@
 
 package com.tagged.pho
 
-import com.tagged.pho.converter.{PhoConverter, IdentityConverter}
+import com.tagged.pho.converter.{IdentityConverter, PhoConverter}
 import org.apache.hadoop.hbase.client.Result
+
 import scala.collection.JavaConverters._
 
 class ResultReader[A](rowKeyConverter: PhoConverter[A], columns: Seq[Column[_]]) {
 
-  val columnMap: Map[ColumnFamily,Map[Qualifier,Column[_]]] = columns
+  val columnMap: Map[ColumnFamily, Map[Qualifier, Column[_]]] = columns
     .groupBy(_.family)
     .mapValues(_.map({ column =>
     column.qualifier -> column
   }).toMap)
-  
-  def getColumn(family: ColumnFamily, qualifier: Qualifier): Column[_] = {
-    columnMap.get(family) match {
-      case Some(columns) => columns.get(qualifier) match {
-        case Some(column) => column
-        case None => Column(family, qualifier, IdentityConverter)
-      }
-      case None => Column(family, qualifier, IdentityConverter)
-    }
-  }
 
   def apply(result: Result): Document[A] = {
     val key = RowKey(rowKeyConverter, result.getRow)
@@ -51,6 +42,16 @@ class ResultReader[A](rowKeyConverter: PhoConverter[A], columns: Seq[Column[_]])
       }
     }
     Document(key, cells.flatten.flatten.toSeq)
+  }
+
+  def getColumn(family: ColumnFamily, qualifier: Qualifier): Column[_] = {
+    columnMap.get(family) match {
+      case Some(columns) => columns.get(qualifier) match {
+        case Some(column) => column
+        case None => Column(family, qualifier, IdentityConverter)
+      }
+      case None => Column(family, qualifier, IdentityConverter)
+    }
   }
 
 }

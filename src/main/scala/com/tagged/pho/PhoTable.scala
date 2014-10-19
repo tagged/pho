@@ -16,31 +16,11 @@
 
 package com.tagged.pho
 
-import com.tagged.pho.converter.IdentityConverter
 import org.apache.hadoop.hbase.client._
+
 import scala.collection.JavaConverters._
 
 class PhoTable(connection: HConnection, tableName: String) {
-
-  def withTable[A](block: HTableInterface => A) = {
-    val table = connection.getTable(tableName)
-    try {
-      block(table)
-    } finally {
-      table.close()
-    }
-  }
-
-  def withScanner[A](scan: Scan)(block: Seq[Result] => A) = {
-    withTable { table =>
-      val scanner = table.getScanner(scan)
-      try {
-        block(scanner.asScala.toSeq)
-      } finally {
-        scanner.close()
-      }
-    }
-  }
 
   def write(doc: Document[_]) = {
     withTable { table =>
@@ -64,6 +44,26 @@ class PhoTable(connection: HConnection, tableName: String) {
     val resultReader = new ResultReader(query.startRow.converter, query.columns)
     withScanner(query.getScan) { scanner =>
       scanner.map(resultReader(_))
+    }
+  }
+
+  def withScanner[A](scan: Scan)(block: Seq[Result] => A) = {
+    withTable { table =>
+      val scanner = table.getScanner(scan)
+      try {
+        block(scanner.asScala.toSeq)
+      } finally {
+        scanner.close()
+      }
+    }
+  }
+
+  def withTable[A](block: HTableInterface => A) = {
+    val table = connection.getTable(tableName)
+    try {
+      block(table)
+    } finally {
+      table.close()
     }
   }
 

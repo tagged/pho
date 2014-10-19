@@ -19,6 +19,7 @@ package com.tagged.pho.converter
 import com.tagged.pho.phoenix.PhoenixConverters._
 import org.specs2.matcher.DataTables
 import org.specs2.mutable.Specification
+
 import scala.runtime.BoxedUnit
 
 class PhoConverterSpec extends Specification with DataTables {
@@ -36,9 +37,9 @@ class PhoConverterSpec extends Specification with DataTables {
   "IdentityConverter" should {
 
     "leave all input untouched" in {
-      "bytes"               |>
-      Array[Byte](23)       |
-      Array[Byte](-3, 4, 3) | { (bytes: Array[Byte]) =>
+      "bytes" |>
+        Array[Byte](23) |
+        Array[Byte](-3, 4, 3) | { (bytes: Array[Byte]) =>
         val toBytesResult = IdentityConverter.toBytes(bytes)
         val getValueResult = IdentityConverter.getValue(bytes)
         toBytesResult must beEqualTo(bytes)
@@ -51,9 +52,9 @@ class PhoConverterSpec extends Specification with DataTables {
   "InvertConverter" should {
 
     "symmetrically convert" in {
-      "bytes"               | "expectedInversion"  |>
-      Array[Byte](23)       ! Array(~23)           |
-      Array[Byte](-3, 4, 3) ! Array(~(-3), ~4, ~3) | { (bytes, expectedInversion) =>
+      "bytes" | "expectedInversion" |>
+        Array[Byte](23) ! Array(~23) |
+        Array[Byte](-3, 4, 3) ! Array(~(-3), ~4, ~3) | { (bytes, expectedInversion) =>
         val converter = InverseConverter(IdentityConverter)
         val toBytesResult = converter.toBytes(bytes)
         val getValueResult = converter.getValue(toBytesResult)

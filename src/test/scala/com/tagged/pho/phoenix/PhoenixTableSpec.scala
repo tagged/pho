@@ -16,8 +16,8 @@
 
 package com.tagged.pho.phoenix
 
+import com.tagged.pho.phoenix.PhoenixFixtures._
 import org.specs2.mutable.Specification
-import PhoenixFixtures._
 
 class PhoenixTableSpec extends Specification {
 
@@ -27,7 +27,7 @@ class PhoenixTableSpec extends Specification {
 
     "connect without complaint" in {
       val result = withConnection({ connection =>
-        connection.isValid(1)  // 1 second
+        connection.isValid(1) // 1 second
       })
       result must beTrue
     }

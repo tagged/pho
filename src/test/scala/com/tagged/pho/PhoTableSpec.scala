@@ -17,14 +17,14 @@
 package com.tagged.pho
 
 import com.tagged.pho.phoenix.PhoenixConverters
-import PhoenixConverters.StringConverter
-import org.apache.hadoop.hbase.client.{Scan, Get, Put}
+import com.tagged.pho.phoenix.PhoenixConverters.StringConverter
+import org.apache.hadoop.hbase.client.{Get, Put, Scan}
 import org.apache.hadoop.hbase.util.Bytes
 import org.specs2.mutable.Specification
 
 class PhoTableSpec extends Specification {
 
-  import TestFixtures._
+  import com.tagged.pho.TestFixtures._
 
   "withTable" should {
 
@@ -57,7 +57,7 @@ class PhoTableSpec extends Specification {
       val column = Column(family1, Qualifier("resultSetTest"), StringConverter)
 
       // write some rows
-      for ((i, word) <- Map(1->"one", 2->"two", 3->"three", 4->"four", 5->"five", 6->"six", 7->"seven", 8->"eight", 9->"nine")) {
+      for ((i, word) <- Map(1 -> "one", 2 -> "two", 3 -> "three", 4 -> "four", 5 -> "five", 6 -> "six", 7 -> "seven", 8 -> "eight", 9 -> "nine")) {
         val doc = new Document(
           RowKey(StringConverter, "readSet." + now + "." + i),
           Seq(Cell(column, word))

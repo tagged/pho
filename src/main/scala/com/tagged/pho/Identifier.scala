@@ -26,13 +26,17 @@ import org.apache.hadoop.hbase.util.Bytes
  */
 class Identifier(val bytes: Array[Byte]) {
 
-  def this(name: String) = this(Identifier.bytesFromString(name))
-
   /**
    * Deep hash value based on the actual bytes in the array.
    * Required for object equality test.
    */
   override lazy val hashCode: Int = Bytes.hashCode(bytes)
+  /**
+   * The identifier converted into a String.
+   */
+  lazy val name = Identifier.stringFromBytes(bytes)
+
+  def this(name: String) = this(Identifier.bytesFromString(name))
 
   /**
    * Deep equality test based on the bytes in the array.
@@ -45,11 +49,6 @@ class Identifier(val bytes: Array[Byte]) {
         case _ => false
       })
   }
-
-  /**
-   * The identifier converted into a String.
-   */
-  lazy val name = Identifier.stringFromBytes(bytes)
 
   /**
    * Human readable output of the identifier.

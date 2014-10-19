@@ -30,6 +30,7 @@ class Qualifier(bytes: Array[Byte]) extends Identifier(bytes) {
 object Qualifier {
 
   def apply(bytes: Array[Byte]): Qualifier = new Qualifier(bytes)
+
   def apply(name: String): Qualifier = new Qualifier(name)
 
 }

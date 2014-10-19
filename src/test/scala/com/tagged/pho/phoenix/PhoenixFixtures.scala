@@ -16,8 +16,9 @@
 
 package com.tagged.pho.phoenix
 
+import java.sql.{Connection, DriverManager, ResultSet}
+
 import com.tagged.pho.TestFixtures
-import java.sql.{ResultSet, Connection, DriverManager}
 
 /**
  * To make it possible to get a phoenix jdbc connection,
@@ -27,33 +28,18 @@ object PhoenixFixtures {
 
   val phoenixIsAvailable = try {
     Class.forName("org.apache.phoenix.jdbc.PhoenixDriver")
-    true  // PhoenixDriver is available
+    true // PhoenixDriver is available
   } catch {
     case _: ClassNotFoundException =>
-      false  // PhoenixDriver is missing
+      false // PhoenixDriver is missing
     case t: Throwable =>
-      t.printStackTrace()  // something else went wrong
+      t.printStackTrace() // something else went wrong
       false
   }
 
   val dsn = "jdbc:phoenix:" + TestFixtures.hbaseZookeeperQuorum + ":/hbase"
 
-  def withConnection[A](f: Connection => A): A = {
-    val connection = DriverManager.getConnection(dsn)
-    try {
-      f(connection)
-    } finally {
-      connection.close()
-    }
-  }
-
-  /* Generator for mapping ResultSet rows */
-  implicit class ResultIterator(set: ResultSet) extends Iterator[ResultSet] {
-    def hasNext: Boolean = set.next()
-    def next(): ResultSet = set
-  }
-
-  def select(sql: String): List[Map[String,Any]] = {
+  def select(sql: String): List[Map[String, Any]] = {
     withConnection({ connection =>
       val statement = connection.prepareStatement(sql)
       val result = statement.executeQuery()
@@ -70,11 +56,27 @@ object PhoenixFixtures {
     })
   }
 
+  def withConnection[A](f: Connection => A): A = {
+    val connection = DriverManager.getConnection(dsn)
+    try {
+      f(connection)
+    } finally {
+      connection.close()
+    }
+  }
+
   def execute(sql: String): Unit = {
     withConnection({ connection =>
       val statement = connection.prepareStatement(sql)
       statement.execute()
     })
+  }
+
+  /* Generator for mapping ResultSet rows */
+  implicit class ResultIterator(set: ResultSet) extends Iterator[ResultSet] {
+    def hasNext: Boolean = set.next()
+
+    def next(): ResultSet = set
   }
 
 }

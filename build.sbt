@@ -13,7 +13,7 @@ libraryDependencies ++= {
     "org.apache.hadoop" % "hadoop-common" % hadoopV,
     "org.apache.hbase" % "hbase-common" % hbaseV,
     "org.apache.hbase" % "hbase-client" % hbaseV,
-    "org.apache.hbase" % "hbase-server" % hbaseV,  // required by phoenix 4.0 client
+    "org.apache.hbase" % "hbase-server" % hbaseV, // required by phoenix 4.0 client
     "org.specs2" %% "specs2" % "2.4.2" % "test"
   )
 }

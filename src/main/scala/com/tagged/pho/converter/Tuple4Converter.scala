@@ -16,10 +16,10 @@
 
 package com.tagged.pho.converter
 
-case class Tuple4Converter[A,B,C,D](a: PhoConverter[A], b: PhoConverter[B], c: PhoConverter[C], d: PhoConverter[D]) extends PhoConverter[(A,B,C,D)] {
-  def toBytes(value: (A,B,C,D)) = Array.concat(a.toBytes(value._1), b.toBytes(value._2), c.toBytes(value._3), d.toBytes(value._4))
+case class Tuple4Converter[A, B, C, D](a: PhoConverter[A], b: PhoConverter[B], c: PhoConverter[C], d: PhoConverter[D]) extends PhoConverter[(A, B, C, D)] {
+  def toBytes(value: (A, B, C, D)) = Array.concat(a.toBytes(value._1), b.toBytes(value._2), c.toBytes(value._3), d.toBytes(value._4))
 
-  def getToken(bytes: Array[Byte]): ConverterToken[(A,B,C,D)] = {
+  def getToken(bytes: Array[Byte]): ConverterToken[(A, B, C, D)] = {
     val token1 = a.getToken(bytes)
     val after1 = bytes.drop(token1.bytes.length)
     val token2 = b.getToken(after1)

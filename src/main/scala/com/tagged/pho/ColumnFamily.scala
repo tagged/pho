@@ -31,6 +31,7 @@ class ColumnFamily(bytes: Array[Byte]) extends Identifier(bytes) {
 object ColumnFamily {
 
   def apply(bytes: Array[Byte]): ColumnFamily = new ColumnFamily(bytes)
+
   def apply(name: String): ColumnFamily = new ColumnFamily(name)
 
 }

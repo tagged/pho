@@ -16,19 +16,19 @@
 
 package com.tagged.pho
 
-import com.tagged.pho.phoenix.PhoenixConverters
-import PhoenixConverters._
 import com.tagged.pho.filter._
+import com.tagged.pho.phoenix.PhoenixConverters
+import com.tagged.pho.phoenix.PhoenixConverters._
 import org.specs2.mutable.Specification
 
 class QuerySpec extends Specification {
 
-  import TestFixtures._
+  import com.tagged.pho.TestFixtures._
 
   val TestPrefix = "QuerySpec"
   val Number = Column(family1, Qualifier(s"$TestPrefix.Number"), IntConverter)
-  val Text   = Column(family1, Qualifier(s"$TestPrefix.Text"), StringConverter)
-  val Even   = Column(family1, Qualifier(s"$TestPrefix.Even"), BooleanConverter)
+  val Text = Column(family1, Qualifier(s"$TestPrefix.Text"), StringConverter)
+  val Even = Column(family1, Qualifier(s"$TestPrefix.Even"), BooleanConverter)
 
   val testData = Seq(
     Seq(
@@ -72,10 +72,9 @@ class QuerySpec extends Specification {
       Cell(Text, "nine")
     )
   )
-  
+
   // write some rows
   val now = System.nanoTime()
-  var i = 0
   val docs = for (cells <- testData) yield {
     i = i + 1
     val doc = new Document(
@@ -85,8 +84,8 @@ class QuerySpec extends Specification {
     testTable.write(doc)
     doc
   }
-
   val endKey = RowKey(StringConverter, s"$TestPrefix.$now.Z")
+  var i = 0
 
   "Query" should {
 
@@ -139,7 +138,7 @@ class QuerySpec extends Specification {
         endKey,
         Seq(Number, Text, Even),
         EqualsFilter(searchCell)
-        and LimitFilter(3)
+          and LimitFilter(3)
       )
       val result = testTable.read(query)
 
@@ -158,7 +157,7 @@ class QuerySpec extends Specification {
         endKey,
         Seq(Number, Text, Even),
         EqualsFilter(searchCell1)
-        or EqualsFilter(searchCell2)
+          or EqualsFilter(searchCell2)
       )
       val result = testTable.read(query)
 
@@ -170,7 +169,7 @@ class QuerySpec extends Specification {
   "WhileFilter" should {
 
     "continue until a particular result is found" in {
-      val searchCell = docs.slice(4,5).head.getCell(Number).get
+      val searchCell = docs.slice(4, 5).head.getCell(Number).get
       val query = Query(
         docs.head.key,
         endKey,

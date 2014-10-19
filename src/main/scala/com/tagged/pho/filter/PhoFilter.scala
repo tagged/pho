@@ -17,7 +17,7 @@
 package com.tagged.pho.filter
 
 import org.apache.hadoop.hbase.client.Scan
-import org.apache.hadoop.hbase.filter.{FilterList, Filter}
+import org.apache.hadoop.hbase.filter.{Filter, FilterList}
 
 trait PhoFilter {
 
