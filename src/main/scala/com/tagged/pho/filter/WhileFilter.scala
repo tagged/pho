@@ -16,7 +16,7 @@
 
 package com.tagged.pho.filter
 
-import org.apache.hadoop.hbase.filter.{WhileMatchFilter, Filter}
+import org.apache.hadoop.hbase.filter.{Filter, WhileMatchFilter}
 
 case class WhileFilter(x: PhoFilter) extends PhoFilter {
 

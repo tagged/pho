@@ -2,14 +2,18 @@
 @Grab('com.tagged.build:jenkins-dsl-common:0.1.22')
 
 import com.tagged.build.common.*
+@GrabResolver('https://artifactory.tagged.com/artifactory/libs-release-local/')
+@Grab('com.tagged.build:jenkins-dsl-common:0.1.22')
+
+import com.tagged.build.common.*
 
 def project = new Project(jobFactory,
-    [
-        githubOwner: 'chat',
-        githubProject: 'pho',
-        hipchatRoom: 'chatstore',
-        email: 'web@tagged.com',
-    ]
+        [
+                githubOwner  : 'chat',
+                githubProject: 'pho',
+                hipchatRoom  : 'chatstore',
+                email        : 'web@tagged.com',
+        ]
 )
 
 def build = project.basicJob {
@@ -22,11 +26,11 @@ def build = project.basicJob {
 
     steps {
         sbt(
-            'sbt',
-            'publish',
-            ('-Dsbt.log.noformat=true' +
-             '-XX:PermSize=256M ' +
-             '-XX:MaxPermSize=512M')
+                'sbt',
+                'publish',
+                ('-Dsbt.log.noformat=true' +
+                        '-XX:PermSize=256M ' +
+                        '-XX:MaxPermSize=512M')
         )
     }
 }

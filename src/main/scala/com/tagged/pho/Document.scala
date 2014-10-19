@@ -57,7 +57,7 @@ case class Document[A](key: RowKey[A], cells: Seq[Cell[_]], version: Option[Vers
   def getPut: Put = {
     val put = version match {
       case Some(v) => new Put(key.toBytes, v.timestamp)
-      case None    => new Put(key.toBytes)
+      case None => new Put(key.toBytes)
     }
     for (value <- cells) {
       value.addToPut(put)

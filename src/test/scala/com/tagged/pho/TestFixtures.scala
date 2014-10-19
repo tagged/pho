@@ -16,8 +16,8 @@
 
 package com.tagged.pho
 
-import org.apache.hadoop.hbase.{HColumnDescriptor, TableName, HTableDescriptor, HBaseConfiguration}
 import org.apache.hadoop.hbase.client.{HBaseAdmin, HConnectionManager}
+import org.apache.hadoop.hbase.{HBaseConfiguration, HColumnDescriptor, HTableDescriptor, TableName}
 
 object TestFixtures {
 

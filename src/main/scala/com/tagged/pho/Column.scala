@@ -18,7 +18,6 @@ package com.tagged.pho
 
 import com.tagged.pho.converter.PhoConverter
 import org.apache.hadoop.hbase.client.Result
-import org.apache.hadoop.hbase.util.Bytes
 
 /**
  * A column defines its identifier (family, qualifier)

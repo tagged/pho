@@ -16,7 +16,7 @@
 
 package com.tagged.pho.filter
 
-import org.apache.hadoop.hbase.filter.{FilterList, Filter}
+import org.apache.hadoop.hbase.filter.{Filter, FilterList}
 
 case class AndFilter(filters: PhoFilter*) extends PhoFilter {
 

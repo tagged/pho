@@ -27,7 +27,7 @@ object PhoenixConverters {
 
     def toBytes(value: Boolean): Array[Byte] = value match {
       case false => Array[Byte](0)
-      case true  => Array[Byte](1)
+      case true => Array[Byte](1)
     }
 
     def getToken(bytes: Array[Byte]): ConverterToken[Boolean] = {

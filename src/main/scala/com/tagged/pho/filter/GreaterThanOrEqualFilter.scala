@@ -17,7 +17,8 @@
 package com.tagged.pho.filter
 
 import com.tagged.pho.Cell
-import org.apache.hadoop.hbase.filter.{CompareFilter, SingleColumnValueFilter, Filter}
+import org.apache.hadoop.hbase.filter.{CompareFilter, Filter, SingleColumnValueFilter}
+
 import scala.language.existentials
 
 case class GreaterThanOrEqualFilter(cell: Cell[_]) extends PhoFilter {
